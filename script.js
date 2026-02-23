@@ -1,9 +1,8 @@
-// ===== TEKNO HOSH UI & AI =====
+// ===== TEKNO HOSH UI & AI (FIXED) =====
 
-const API_URL = "https://api.gapgpt.app/v1/chat/completions"; // لینک GapGPT
-const MODEL = "gpt-4o"; // مدل GPT-4
-let API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa"; // <-- api
-
+const API_URL = "https://api.gapgpt.app/v1/chat/completions";
+const MODEL = "gpt-4o";
+let API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa"; // ← api
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -13,68 +12,39 @@ let messages = [
     {role:"system", content:"تو یک دستیار مفید و دوستانه هستی."}
 ];
 
-// تغییر زبان
-let currentLang = "fa";
-const translations = {
-    fa: { placeholder:"پیام خود را بنویسید...", send:"ارسال" },
-    en: { placeholder:"Type your message...", send:"Send" }
-};
-
-function updateLanguage(){
-    input.placeholder = translations[currentLang].placeholder;
-    sendBtn.textContent = translations[currentLang].send;
-    document.getElementById("langToggle").textContent = currentLang==="fa"?"EN":"FA";
+// تابع تایپ شدن تدریجی پیام
+function typeEffect(element, text, speed = 20){
+    element.textContent = "";
+    let i = 0;
+    const interval = setInterval(()=>{
+        element.textContent += text[i];
+        i++;
+        if(i >= text.length) clearInterval(interval);
+    }, speed);
 }
 
-document.getElementById("langToggle").onclick = ()=>{
-    currentLang = currentLang==="fa"?"en":"fa";
-    updateLanguage();
-};
-updateLanguage();
-
-// دارک/لایت
-document.getElementById("themeToggle").onclick = ()=>{
-    document.body.classList.toggle("techno-light");
-    document.body.classList.toggle("techno-dark");
-    document.getElementById("themeToggle").textContent =
-        document.body.classList.contains("techno-dark")?"🌙":"☀️";
-};
-
 // نمایش پیام
-function addMessage(text,sender){
+function addMessage(text, sender){
     const div = document.createElement("div");
     div.className = "message "+(sender==="user"?"user-message":"ai-message");
     const bubble = document.createElement("div");
-    bubble.className="message-content";
+    bubble.className = "message-content";
     div.appendChild(bubble);
     messagesDiv.appendChild(div);
-    typeEffect(bubble,text);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
 
-// تایپ شدن تدریجی
-function typeEffect(element,text,speed=20){
-    element.textContent="";
-    let i=0;
-    spinner.style.display="block";
-    const interval = setInterval(()=>{
-        element.textContent+=text[i];
-        i++;
-        if(i>=text.length){
-            clearInterval(interval);
-            spinner.style.display="none";
-        }
-    },speed);
+    // فقط برای AI تایپ تدریجی
+    if(sender==="assistant") typeEffect(bubble, text);
+    else bubble.textContent = text;
 }
 
 // ارسال پیام
 async function sendMessage(){
-    const message = input.value.trim();
-    if(!message) return;
-    addMessage(message,"user");
+    const msg = input.value.trim();
+    if(!msg) return;
+    addMessage(msg, "user");
     input.value="";
-    messages.push({role:"user", content:message});
-
+    messages.push({role:"user", content:msg});
     spinner.style.display="block";
 
     try{
@@ -82,27 +52,30 @@ async function sendMessage(){
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
-                "Authorization":Bearer ${API_KEY}
+                "Authorization": Bearer ${API_KEY}
             },
-            body:JSON.stringify({
-                model:MODEL,
-                messages:messages,
-                temperature:0.7
+            body: JSON.stringify({
+                model: MODEL,
+                messages: messages,
+                temperature: 0.7
             })
         });
         const data = await res.json();
         const aiMsg = data.choices[0].message.content;
-        addMessage(aiMsg,"assistant");
+        addMessage(aiMsg, "assistant");
         messages.push({role:"assistant", content:aiMsg});
     }catch(err){
-        addMessage("❌ خطا: "+err.message,"assistant");
+        addMessage("❌ خطا: " + err.message, "assistant");
+    } finally {
         spinner.style.display="none";
     }
 }
 
-// دکمه و اینتر
-sendBtn.addEventListener("click",sendMessage);
-input.addEventListener("keydown",e=>{
+// دکمه ارسال
+sendBtn.addEventListener("click", sendMessage);
+
+// ارسال با Enter
+input.addEventListener("keydown", e => {
     if(e.key==="Enter" && !e.shiftKey){
         e.preventDefault();
         sendMessage();
