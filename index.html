@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Nora AI · دانلود نسخه‌ها</title>
+  <title>Nora AI · ریسپانسیو</title>
   <style>
+    /* -------------------- RESET & VARIABLES -------------------- */
     * {
       margin: 0;
       padding: 0;
@@ -13,6 +14,7 @@
     }
 
     :root {
+      /* Dark mode (پیش‌فرض) */
       --bg-start: #0b0d1e;
       --bg-end: #1a1f3a;
       --glass-bg: rgba(20, 30, 55, 0.4);
@@ -67,6 +69,7 @@
       overflow: hidden;
     }
 
+    /* ذرات پس زمینه */
     body::before {
       content: "";
       position: absolute;
@@ -92,7 +95,7 @@
       100% { transform: translate(-15%, -10%) rotate(3deg); }
     }
 
-    /* ===== HEADER & LOGO ===== */
+    /* ===== HEADER ===== */
     header {
       position: relative;
       display: flex;
@@ -109,7 +112,7 @@
 
     .logo {
       font-weight: 700;
-      font-size: 1.9rem;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
       letter-spacing: 2px;
       background: linear-gradient(145deg, #fff8, var(--accent-glow), #f0f, #aaf0ff);
       -webkit-background-clip: text;
@@ -124,7 +127,7 @@
       100% { text-shadow: 0 0 15px #0ff, 0 0 35px #ff80f0, 0 0 60px #3b8eff; opacity: 1; }
     }
 
-    /* ===== منوی اصلی (همبرگر) ===== */
+    /* ===== دکمه منو ===== */
     .menu-btn {
       font-size: 2rem;
       cursor: pointer;
@@ -138,19 +141,20 @@
       backdrop-filter: blur(12px);
       border: 1px solid var(--glass-border);
       transition: 0.2s;
+      flex-shrink: 0;
     }
     .menu-btn:hover {
       transform: scale(1.07);
       box-shadow: 0 0 25px var(--accent-glow);
     }
 
-    /* منوی اصلی */
+    /* ===== منوی اصلی ===== */
     .menu {
       position: absolute;
       top: 80px;
       left: 20px;
       right: 20px;
-      max-width: 280px;
+      max-width: min(350px, 90%);
       background: var(--glass-bg);
       backdrop-filter: blur(24px);
       border-radius: 32px;
@@ -171,9 +175,9 @@
     .menu > button {
       background: rgba(255,255,255,0.08);
       border: 1px solid var(--glass-border);
-      padding: 14px 18px;
+      padding: clamp(12px, 3vw, 14px) clamp(15px, 4vw, 18px);
       border-radius: 28px;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 4vw, 1.1rem);
       cursor: pointer;
       color: var(--text-primary);
       backdrop-filter: blur(5px);
@@ -204,9 +208,9 @@
     .download-submenu button {
       background: rgba(255,255,255,0.05);
       border: 1px solid var(--glass-border);
-      padding: 12px 18px;
+      padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 18px);
       border-radius: 25px;
-      font-size: 1rem;
+      font-size: clamp(0.95rem, 3.5vw, 1rem);
       cursor: pointer;
       color: var(--text-primary);
       backdrop-filter: blur(5px);
@@ -222,23 +226,23 @@
       box-shadow: 0 0 20px var(--accent-glow2);
     }
 
-    /* ===== CHAT ===== */
+    /* ===== CHAT AREA (کاملاً ریسپانسیو) ===== */
     #chatBox {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 18px;
+      padding: clamp(15px, 4vw, 20px) clamp(12px, 3vw, 18px);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: clamp(10px, 2.5vw, 14px);
       z-index: 5;
       scroll-behavior: smooth;
       direction: ltr;
     }
 
     .message {
-      max-width: 88%;
-      padding: 16px 22px;
-      border-radius: 32px 32px 32px 12px;
+      max-width: min(85%, 600px);
+      padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 22px);
+      border-radius: clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(10px, 3vw, 12px);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       background: var(--glass-bg);
@@ -251,11 +255,12 @@
       direction: rtl;
       text-align: start;
       position: relative;
+      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
     }
 
     .message.user {
       align-self: flex-end;
-      border-radius: 32px 32px 12px 32px;
+      border-radius: clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(10px, 3vw, 12px) clamp(25px, 5vw, 32px);
       background: rgba(0, 180, 255, 0.25);
       box-shadow: 0 0 25px var(--message-user-glow);
     }
@@ -266,11 +271,11 @@
       box-shadow: 0 0 25px var(--message-bot-glow);
     }
 
-    /* انیمیشن تایپ */
+    /* انیمیشن تایپ ریسپانسیو */
     .typing-indicator {
       display: flex;
       gap: 6px;
-      padding: 16px 22px;
+      padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 22px);
       background: var(--glass-bg);
       border-radius: 40px;
       width: fit-content;
@@ -279,8 +284,8 @@
       margin-bottom: 8px;
     }
     .typing-indicator span {
-      width: 10px;
-      height: 10px;
+      width: clamp(8px, 2vw, 10px);
+      height: clamp(8px, 2vw, 10px);
       background: var(--accent-glow);
       border-radius: 50%;
       opacity: 0.7;
@@ -293,10 +298,10 @@
       30% { transform: translateY(-10px); opacity: 1; background: #fff; }
     }
 
-    /* بخش کد */
+    /* بخش کد ریسپانسیو */
     pre {
       background: var(--code-bg);
-      padding: 15px;
+      padding: clamp(12px, 3vw, 15px);
       border-radius: 20px;
       overflow-x: auto;
       direction: ltr;
@@ -306,20 +311,21 @@
       margin: 12px 0 6px;
       white-space: pre-wrap;
       word-wrap: break-word;
+      font-size: clamp(0.85rem, 3vw, 0.95rem);
     }
     .code-wrapper {
       position: relative;
     }
     .copy-btn {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: clamp(5px, 2vw, 10px);
+      left: clamp(5px, 2vw, 10px);
       background: var(--copy-btn-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
       border-radius: 30px;
-      padding: 6px 16px;
-      font-size: 0.85rem;
+      padding: clamp(4px, 1.5vw, 6px) clamp(10px, 3vw, 16px);
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
       cursor: pointer;
       backdrop-filter: blur(8px);
       display: flex;
@@ -339,9 +345,9 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ===== FOOTER ===== */
+    /* ===== FOOTER ریسپانسیو ===== */
     footer {
-      padding: 14px 18px;
+      padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 18px);
       backdrop-filter: blur(var(--glass-blur));
       background: var(--header-footer-bg);
       border-top: 1px solid var(--glass-border);
@@ -351,10 +357,10 @@
     .input-wrapper {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: clamp(8px, 2vw, 12px);
       background: var(--glass-bg);
       backdrop-filter: blur(12px);
-      padding: 6px 6px 6px 18px;
+      padding: clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(12px, 3vw, 18px);
       border-radius: 60px;
       border: 1px solid var(--glass-border);
       box-shadow: 0 12px 28px rgba(0,0,0,0.25);
@@ -369,25 +375,31 @@
       outline: none;
       background: transparent;
       color: var(--text-primary);
-      font-size: 1.1rem;
-      padding: 14px 0;
+      font-size: clamp(1rem, 4vw, 1.1rem);
+      padding: clamp(10px, 2.5vw, 14px) 0;
       direction: rtl;
+      min-width: 50px;
     }
     input::placeholder {
       color: var(--placeholder);
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
     }
 
     button.send-btn {
-      width: 58px;
-      height: 58px;
+      width: clamp(48px, 12vw, 58px);
+      height: clamp(48px, 12vw, 58px);
       border-radius: 50%;
       background: var(--send-btn-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
-      font-size: 1.8rem;
+      font-size: clamp(1.5rem, 5vw, 1.8rem);
       cursor: pointer;
       transition: 0.18s;
       backdrop-filter: blur(8px);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     button.send-btn:hover {
       transform: scale(1.1) rotate(5deg);
@@ -395,8 +407,48 @@
       box-shadow: 0 0 30px var(--accent-glow);
     }
 
-    #chatBox::-webkit-scrollbar { width: 5px; }
-    #chatBox::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 20px; }
+    /* اسکرول بار اختصاصی */
+    #chatBox::-webkit-scrollbar { 
+      width: 5px; 
+    }
+    #chatBox::-webkit-scrollbar-thumb { 
+      background: var(--accent-glow); 
+      border-radius: 20px; 
+    }
+    
+    /* حالت دسکتاپ (عرض بیشتر از 768px) */
+    @media (min-width: 768px) {
+      .message {
+        max-width: min(70%, 700px);
+      }
+      
+      .menu {
+        left: auto;
+        right: 20px;
+        max-width: 320px;
+      }
+      
+      .logo {
+        font-size: 2rem;
+      }
+    }
+    
+    /* حالت موبایل خیلی کوچک */
+    @media (max-width: 380px) {
+      .logo {
+        font-size: 1.3rem;
+      }
+      
+      .menu-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.6rem;
+      }
+      
+      .message {
+        max-width: 92%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -410,10 +462,10 @@
     <button onclick="newChat()" id="newChatBtn">🆕 چت جدید</button>
     <button onclick="toggleLanguage()" id="langBtn">🌐 تغییر زبان</button>
     
-    <!-- دکمه دانلود (بازکننده زیرمنو) -->
+    <!-- دکمه دانلود -->
     <button onclick="toggleDownloadSubmenu(event)" id="downloadBtn">📥 دانلود اپلیکیشن</button>
     
-    <!-- زیرمنوی دانلود (ویندوز و اندروید) -->
+    <!-- زیرمنوی دانلود -->
     <div class="download-submenu" id="downloadSubmenu">
       <button onclick="openDownloadLink('windows')" id="windowsBtn">🪟 نسخه ویندوز</button>
       <button onclick="openDownloadLink('android')" id="androidBtn">📱 نسخه اندروید</button>
@@ -439,10 +491,10 @@
     let isTyping = false;
     let typingIndicatorDiv = null;
 
-    // ===== لینک‌های دانلود (اینجا می‌تونید لینک‌های خودتون رو قرار بدید) =====
+    // لینک‌های دانلود
     const DOWNLOAD_LINKS = {
-      windows: 'https://example.com/nora-windows.exe',  // لینک نسخه ویندوز
-      android: 'https://example.com/nora-android.apk'   // لینک نسخه اندروید
+      windows: 'https://nexclex.com/apps/nora-windows.exe',
+      android: 'https://nexclex.com/apps/nora-android.apk'
     };
 
     const texts = {
@@ -499,13 +551,12 @@
       document.documentElement.lang = lang === 'fa' ? 'fa' : 'en';
       document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
       
-      // بروزرسانی دکمه‌های کپی
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.innerText = texts[lang].copy;
       });
     }
 
-    // باز کردن لینک دانلود (در تب جدید)
+    // باز کردن لینک دانلود
     window.openDownloadLink = function(platform) {
       const link = DOWNLOAD_LINKS[platform];
       if (link) {
@@ -513,7 +564,6 @@
       } else {
         alert( lang === 'fa' ? 'لینک دانلود تنظیم نشده است!' : 'Download link not configured!' );
       }
-      // بستن منو بعد از کلیک
       menu.style.display = 'none';
       menuVisible = false;
       downloadSubmenuVisible = false;
@@ -523,18 +573,13 @@
     window.toggleDownloadSubmenu = function(event) {
       event.stopPropagation();
       downloadSubmenuVisible = !downloadSubmenuVisible;
-      if (downloadSubmenuVisible) {
-        downloadSubmenu.classList.add('show');
-      } else {
-        downloadSubmenu.classList.remove('show');
-      }
+      downloadSubmenu.classList.toggle('show', downloadSubmenuVisible);
     };
 
     // منوی اصلی
     window.toggleMenu = function() {
       menuVisible = !menuVisible;
       menu.style.display = menuVisible ? 'flex' : 'none';
-      // وقتی منو بسته میشه زیرمنو هم مخفی شه
       if (!menuVisible) {
         downloadSubmenu.classList.remove('show');
         downloadSubmenuVisible = false;
@@ -682,7 +727,7 @@
         addMessage('bot', reply);
       } catch (error) {
         hideTypingIndicator();
-        addMessage('bot', '❌ خطا در ارتباط با سرور. اینترنت را بررسی کن.');
+        addMessage('bot', '❌ خطا در ارتباط با سرور.');
         console.error(error);
       }
     };
@@ -694,6 +739,20 @@
       }
     });
 
+    // تشخیص اندازه صفحه و اعمال کلاس خاص (اختیاری)
+    function checkScreenSize() {
+      if (window.innerWidth >= 768) {
+        document.body.classList.add('desktop-mode');
+        document.body.classList.remove('mobile-mode');
+      } else {
+        document.body.classList.add('mobile-mode');
+        document.body.classList.remove('desktop-mode');
+      }
+    }
+    
+    window.addEventListener('resize', checkScreenSize);
+    checkScreenSize();
+    
     // مقداردهی اولیه
     applyUILanguage();
   })();
