@@ -15,13 +15,13 @@
     }
 
     :root {
-      /* Dark mode - بدون ذرات، با رنگهای عمیق */
-      --bg-start: #0c0b1a;
-      --bg-end: #1e1a3a;
-      --glass-bg: rgba(30, 25, 60, 0.7);
+      /* Dark mode - پس‌زمینه مشکی */
+      --bg-start: #000000;
+      --bg-end: #0a0a0a;
+      --glass-bg: rgba(20, 20, 30, 0.8);
       --glass-blur: 12px;
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
       --text-primary: #f0f3ff;
       --text-secondary: #b0c0ff;
       --accent-glow: #00e0ff;
@@ -30,29 +30,30 @@
       --send-btn-bg: rgba(255, 255, 255, 0.1);
       --message-user-glow: rgba(0, 224, 255, 0.3);
       --message-bot-glow: rgba(160, 110, 255, 0.4);
-      --header-footer-bg: rgba(15, 12, 30, 0.8);
-      --code-bg: rgba(0, 0, 0, 0.4);
+      --header-footer-bg: rgba(0, 0, 0, 0.5);
+      --code-bg: rgba(0, 0, 0, 0.6);
       --copy-btn-bg: rgba(255,255,255,0.15);
     }
 
     .light {
-      --bg-start: #d0e0ff;
-      --bg-end: #f5d0ff;
+      /* Light mode - پس‌زمینه آبی */
+      --bg-start: #0066cc;
+      --bg-end: #00aaff;
       --glass-bg: rgba(255, 255, 255, 0.7);
       --glass-blur: 12px;
-      --glass-border: rgba(180, 130, 255, 0.3);
-      --glass-shadow: 0 8px 32px rgba(150, 100, 255, 0.15);
-      --text-primary: #1a1035;
-      --text-secondary: #452f6b;
-      --accent-glow: #c154ff;
-      --accent-glow2: #3b8eff;
-      --placeholder: #7a6b9a;
-      --send-btn-bg: rgba(255, 230, 250, 0.7);
-      --message-user-glow: rgba(193, 84, 255, 0.4);
-      --message-bot-glow: rgba(59, 142, 255, 0.4);
-      --header-footer-bg: rgba(255, 240, 250, 0.8);
-      --code-bg: rgba(240, 230, 255, 0.7);
-      --copy-btn-bg: rgba(180, 140, 255, 0.3);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-shadow: 0 8px 32px rgba(0, 100, 255, 0.2);
+      --text-primary: #ffffff;
+      --text-secondary: #e0f0ff;
+      --accent-glow: #ffffff;
+      --accent-glow2: #ffff00;
+      --placeholder: #e0f0ff;
+      --send-btn-bg: rgba(255, 255, 255, 0.3);
+      --message-user-glow: rgba(255, 255, 255, 0.5);
+      --message-bot-glow: rgba(255, 255, 255, 0.5);
+      --header-footer-bg: rgba(0, 100, 200, 0.4);
+      --code-bg: rgba(0, 0, 0, 0.2);
+      --copy-btn-bg: rgba(255, 255, 255, 0.4);
     }
 
     body {
@@ -60,23 +61,15 @@
       height: -webkit-fill-available;
       display: flex;
       flex-direction: column;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end), #2a2355);
-      background-size: 300% 300%;
-      animation: smoothGradient 15s ease infinite;
+      background: linear-gradient(145deg, var(--bg-start), var(--bg-end));
       color: var(--text-primary);
-      transition: background 0.3s, color 0.2s;
+      transition: background 0.3s ease, color 0.2s;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       overflow: hidden;
-    }
-
-    @keyframes smoothGradient {
-      0% { background-position: 0% 0%; }
-      50% { background-position: 100% 100%; }
-      100% { background-position: 0% 0%; }
     }
 
     /* ===== HEADER ===== */
