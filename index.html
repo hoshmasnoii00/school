@@ -1,323 +1,702 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nora AI Ultra</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Nora AI · دانلود نسخه‌ها</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'system-ui', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
 
-<style>
-:root{
-  --text:#ffffff;
-  --glass: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.25);
-  --accent:#00f0ff;
-  --placeholder:#aaa;
-  --bg-dark: linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#0f2027);
-  --particle: rgba(255,255,255,0.1);
-}
+    :root {
+      --bg-start: #0b0d1e;
+      --bg-end: #1a1f3a;
+      --glass-bg: rgba(20, 30, 55, 0.4);
+      --glass-blur: 18px;
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      --text-primary: #f0f3ff;
+      --text-secondary: #b0c0ff;
+      --accent-glow: #00e0ff;
+      --accent-glow2: #a06eff;
+      --placeholder: #aab4dd;
+      --particle-color: rgba(255, 255, 255, 0.1);
+      --send-btn-bg: rgba(255, 255, 255, 0.1);
+      --message-user-glow: rgba(0, 224, 255, 0.4);
+      --message-bot-glow: rgba(160, 110, 255, 0.5);
+      --header-footer-bg: rgba(8, 12, 28, 0.5);
+      --code-bg: rgba(0, 0, 0, 0.3);
+      --copy-btn-bg: rgba(255,255,255,0.1);
+    }
 
-.light{
-  --text:#1a1a1a;
-  --glass: rgba(255,255,255,0.15);
-  --border: rgba(0,0,0,0.15);
-  --accent:#0077ff;
-  --placeholder:#555;
-  --bg-dark: linear-gradient(-45deg,#d9e6f2,#edf3fb,#e6f0f9,#f1f8ff);
-  --particle: rgba(0,0,0,0.05);
-}
+    .light {
+      --bg-start: #e2e9ff;
+      --bg-end: #fbe9ff;
+      --glass-bg: rgba(255, 255, 255, 0.55);
+      --glass-blur: 16px;
+      --glass-border: rgba(255, 115, 200, 0.25);
+      --glass-shadow: 0 20px 40px rgba(180, 100, 255, 0.2), 0 0 0 1px rgba(255, 160, 235, 0.5) inset;
+      --text-primary: #1a1035;
+      --text-secondary: #452f6b;
+      --accent-glow: #c154ff;
+      --accent-glow2: #3b8eff;
+      --placeholder: #7a6b9a;
+      --particle-color: rgba(170, 90, 255, 0.15);
+      --send-btn-bg: rgba(255, 230, 250, 0.7);
+      --message-user-glow: rgba(193, 84, 255, 0.5);
+      --message-bot-glow: rgba(59, 142, 255, 0.5);
+      --header-footer-bg: rgba(255, 240, 250, 0.6);
+      --code-bg: rgba(240, 230, 255, 0.7);
+      --copy-btn-bg: rgba(180, 140, 255, 0.3);
+    }
 
-body{
-  margin:0;
-  font-family:system-ui;
-  color:var(--text);
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  background:var(--bg-dark);
-  background-size:400% 400%;
-  animation:aurora 20s ease infinite;
-  transition:0.4s;
-}
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(-45deg, var(--bg-start), var(--bg-end), #212863, #251d47);
+      background-size: 300% 300%;
+      animation: auroraFlow 18s ease infinite;
+      color: var(--text-primary);
+      transition: background 0.3s, color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
 
-@keyframes aurora{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
+    body::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background-image: radial-gradient(circle at 30% 40%, var(--particle-color) 2px, transparent 2px),
+                        radial-gradient(circle at 80% 70%, var(--particle-color) 1px, transparent 2px),
+                        radial-gradient(circle at 15% 85%, var(--particle-color) 3px, transparent 3px);
+      background-size: 100px 100px, 150px 150px, 200px 200px;
+      animation: driftParticles 60s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-body::after{
-  content:"";
-  position:absolute;
-  width:200%;
-  height:200%;
-  background:radial-gradient(circle,var(--particle) 1px,transparent 1px);
-  background-size:50px 50px;
-  animation:moveParticles 80s linear infinite;
-  pointer-events:none;
-}
+    @keyframes auroraFlow {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
 
-@keyframes moveParticles{
-  from{transform:translate(0,0);}
-  to{transform:translate(-200px,-200px);}
-}
+    @keyframes driftParticles {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-15%, -10%) rotate(3deg); }
+    }
 
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  backdrop-filter: blur(25px);
-  background:var(--glass);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 0 25px rgba(0,0,0,0.2);
-  position:relative;
-  z-index:2;
-}
+    /* ===== HEADER & LOGO ===== */
+    header {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 22px;
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      background: var(--header-footer-bg);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+      z-index: 15;
+    }
 
-.logo{
-  font-weight:bold;
-  letter-spacing:1px;
-}
+    .logo {
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: 2px;
+      background: linear-gradient(145deg, #fff8, var(--accent-glow), #f0f, #aaf0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #a06eff, 0 0 40px #ff00c8;
+      animation: logoPulse 3s infinite alternate;
+      white-space: nowrap;
+    }
+    @keyframes logoPulse {
+      0% { text-shadow: 0 0 5px #0ff, 0 0 15px #a06eff, 0 0 30px #f0f; opacity: 0.95; }
+      100% { text-shadow: 0 0 15px #0ff, 0 0 35px #ff80f0, 0 0 60px #3b8eff; opacity: 1; }
+    }
 
-.menu-btn{
-  font-size:22px;
-  cursor:pointer;
-}
+    /* ===== منوی اصلی (همبرگر) ===== */
+    .menu-btn {
+      font-size: 2rem;
+      cursor: pointer;
+      background: var(--glass-bg);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 40px;
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      transition: 0.2s;
+    }
+    .menu-btn:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
 
-.menu{
-  position:absolute;
-  top:70px;
-  right:20px;
-  backdrop-filter: blur(30px);
-  background:var(--glass);
-  border-radius:20px;
-  padding:15px;
-  display:none;
-  flex-direction:column;
-  gap:12px;
-  border:1px solid var(--border);
-  box-shadow:0 0 25px rgba(0,0,0,0.15);
-  animation:fadeIn 0.3s ease;
-}
+    /* منوی اصلی */
+    .menu {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      right: 20px;
+      max-width: 280px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      border-radius: 32px;
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      z-index: 25;
+      animation: menuPop 0.25s ease;
+    }
+    @keyframes menuPop {
+      0% { opacity: 0; transform: translateY(-15px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-.menu button{
-  background:var(--glass);
-  border:1px solid var(--border);
-  padding:10px;
-  border-radius:15px;
-  cursor:pointer;
-  color:var(--text);
-  position:relative;
-  overflow:hidden;
-  transition:0.3s;
-}
+    .menu > button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--glass-border);
+      padding: 14px 18px;
+      border-radius: 28px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--text-primary);
+      backdrop-filter: blur(5px);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: right;
+    }
+    .menu > button:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: var(--accent-glow);
+      box-shadow: 0 0 28px var(--accent-glow);
+    }
 
-.menu button:hover{
-  box-shadow:0 0 20px var(--accent);
-  transform:scale(1.05);
-}
+    /* زیرمنوی دانلود */
+    .download-submenu {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 5px;
+      margin-right: 20px;
+    }
+    .download-submenu.show {
+      display: flex;
+    }
+    .download-submenu button {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      padding: 12px 18px;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--text-primary);
+      backdrop-filter: blur(5px);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: right;
+    }
+    .download-submenu button:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: var(--accent-glow2);
+      box-shadow: 0 0 20px var(--accent-glow2);
+    }
 
-.menu button::after{
-  content:"";
-  position:absolute;
-  width:0;
-  height:0;
-  background:rgba(255,255,255,0.2);
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  top:50%;
-  left:50%;
-  transition:width 0.4s ease,height 0.4s ease;
-}
+    /* ===== CHAT ===== */
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 5;
+      scroll-behavior: smooth;
+      direction: ltr;
+    }
 
-.menu button:active::after{
-  width:150px;
-  height:150px;
-}
+    .message {
+      max-width: 88%;
+      padding: 16px 22px;
+      border-radius: 32px 32px 32px 12px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+      color: var(--text-primary);
+      line-height: 1.5;
+      word-break: break-word;
+      animation: messageRise 0.35s ease;
+      direction: rtl;
+      text-align: start;
+      position: relative;
+    }
 
-#chatBox{
-  flex:1;
-  overflow-y:auto;
-  padding:20px;
-  z-index:2;
-}
+    .message.user {
+      align-self: flex-end;
+      border-radius: 32px 32px 12px 32px;
+      background: rgba(0, 180, 255, 0.25);
+      box-shadow: 0 0 25px var(--message-user-glow);
+    }
 
-.message{
-  margin-bottom:15px;
-  padding:15px;
-  border-radius:25px;
-  backdrop-filter: blur(20px);
-  background:var(--glass);
-  border:1px solid var(--border);
-  animation:slideUp 0.4s ease;
-}
+    .message.bot {
+      align-self: flex-start;
+      background: rgba(160, 110, 255, 0.2);
+      box-shadow: 0 0 25px var(--message-bot-glow);
+    }
 
-.user{
-  box-shadow:0 0 15px rgba(0,119,255,0.4);
-}
+    /* انیمیشن تایپ */
+    .typing-indicator {
+      display: flex;
+      gap: 6px;
+      padding: 16px 22px;
+      background: var(--glass-bg);
+      border-radius: 40px;
+      width: fit-content;
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 8px;
+    }
+    .typing-indicator span {
+      width: 10px;
+      height: 10px;
+      background: var(--accent-glow);
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: typingBounce 1.4s infinite ease-in-out;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-10px); opacity: 1; background: #fff; }
+    }
 
-.bot{
-  box-shadow:0 0 15px rgba(255,0,255,0.4);
-}
+    /* بخش کد */
+    pre {
+      background: var(--code-bg);
+      padding: 15px;
+      border-radius: 20px;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+      font-family: 'Courier New', monospace;
+      border: 1px solid var(--glass-border);
+      margin: 12px 0 6px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .code-wrapper {
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--copy-btn-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: 0.2s;
+      z-index: 6;
+    }
+    .copy-btn:hover {
+      background: var(--accent-glow);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
 
-footer{
-  padding:15px;
-  backdrop-filter: blur(25px);
-  background:var(--glass);
-  border-top:1px solid var(--border);
-  z-index:2;
-}
+    @keyframes messageRise {
+      0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-.input-wrapper{
-  display:flex;
-  background:var(--glass);
-  padding:8px;
-  border-radius:30px;
-  border:1px solid var(--border);
-  box-shadow:0 0 20px rgba(0,0,0,0.1);
-}
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 14px 18px;
+      backdrop-filter: blur(var(--glass-blur));
+      background: var(--header-footer-bg);
+      border-top: 1px solid var(--glass-border);
+      z-index: 15;
+    }
 
-input{
-  flex:1;
-  border:none;
-  outline:none;
-  background:transparent;
-  color:var(--text);
-  padding:12px;
-}
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      padding: 6px 6px 6px 18px;
+      border-radius: 60px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+    .input-wrapper:focus-within {
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
 
-input::placeholder{
-  color:var(--placeholder);
-}
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      padding: 14px 0;
+      direction: rtl;
+    }
+    input::placeholder {
+      color: var(--placeholder);
+    }
 
-button.send-btn{
-  border:none;
-  padding:10px 18px;
-  border-radius:20px;
-  background:var(--glass);
-  color:var(--text);
-  cursor:pointer;
-  transition:0.3s;
-  border:1px solid var(--border);
-}
+    button.send-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--send-btn-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: 0.18s;
+      backdrop-filter: blur(8px);
+    }
+    button.send-btn:hover {
+      transform: scale(1.1) rotate(5deg);
+      border-color: var(--accent-glow);
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
 
-button.send-btn:hover{
-  box-shadow:0 0 25px var(--accent);
-  transform:scale(1.05);
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(-10px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-@keyframes slideUp{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
-}
-</style>
+    #chatBox::-webkit-scrollbar { width: 5px; }
+    #chatBox::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 20px; }
+  </style>
 </head>
-
 <body>
-
 <header>
-<div class="logo" id="logoText">Nora AI</div>
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-<div class="menu" id="menu">
-<button onclick="toggleMode()">🌗 تغییر تم</button>
-<button onclick="newChat()">🆕 چت جدید</button>
-<button onclick="toggleLanguage()">🌐 تغییر زبان</button>
-</div>
+  <div class="logo" id="logoText">✨ NØRΛ ⚡</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  
+  <!-- منوی اصلی همبرگری -->
+  <div class="menu" id="menu">
+    <button onclick="toggleMode()" id="themeBtn">🌗 تغییر تم</button>
+    <button onclick="newChat()" id="newChatBtn">🆕 چت جدید</button>
+    <button onclick="toggleLanguage()" id="langBtn">🌐 تغییر زبان</button>
+    
+    <!-- دکمه دانلود (بازکننده زیرمنو) -->
+    <button onclick="toggleDownloadSubmenu(event)" id="downloadBtn">📥 دانلود اپلیکیشن</button>
+    
+    <!-- زیرمنوی دانلود (ویندوز و اندروید) -->
+    <div class="download-submenu" id="downloadSubmenu">
+      <button onclick="openDownloadLink('windows')" id="windowsBtn">🪟 نسخه ویندوز</button>
+      <button onclick="openDownloadLink('android')" id="androidBtn">📱 نسخه اندروید</button>
+    </div>
+  </div>
 </header>
 
-<div id="chatBox"></div>
+<div id="chatBox" dir="rtl"></div>
 
 <footer>
-<div class="input-wrapper">
-<input id="userInput" placeholder="پیام بنویس...">
-<button class="send-btn" onclick="sendMessage()">➤</button>
-</div>
+  <div class="input-wrapper">
+    <input id="userInput" placeholder="پیام بنویس ..." dir="rtl">
+    <button class="send-btn" onclick="sendMessage()" id="sendBtn">➤</button>
+  </div>
 </footer>
 
 <script>
-let lang="fa";
-const texts={
-  fa:{
-    placeholder:"پیام بنویس...",
-    newChat:"🆕 چت جدید",
-    toggleTheme:"🌗 تغییر تم",
-    toggleLang:"🌐 تغییر زبان",
-    logo:"Nora AI",
-  },
-  en:{
-    placeholder:"Type a message...",
-    newChat:"🆕 New Chat",
-    toggleTheme:"🌗 Toggle Theme",
-    toggleLang:"🌐 Change Language",
-    logo:"Nora AI",
-  }
-};
+  (function() {
+    // ---------- وضعیت و ترجمه ----------
+    let lang = 'fa';
+    let menuVisible = false;
+    let downloadSubmenuVisible = false;
+    let isTyping = false;
+    let typingIndicatorDiv = null;
 
-function toggleMenu(){
-  const m=document.getElementById("menu");
-  m.style.display=m.style.display==="flex"?"none":"flex";
-}
+    // ===== لینک‌های دانلود (اینجا می‌تونید لینک‌های خودتون رو قرار بدید) =====
+    const DOWNLOAD_LINKS = {
+      windows: 'https://example.com/nora-windows.exe',  // لینک نسخه ویندوز
+      android: 'https://example.com/nora-android.apk'   // لینک نسخه اندروید
+    };
 
-function toggleMode(){
-  document.body.classList.toggle("light");
-}
-
-function newChat(){
-  document.getElementById("chatBox").innerHTML="";
-}
-
-function toggleLanguage(){
-  lang=lang==="fa"?"en":"fa";
-  document.getElementById("userInput").placeholder=texts[lang].placeholder;
-  document.getElementById("logoText").innerText=texts[lang].logo;
-  const btns=document.querySelectorAll(".menu button");
-  btns[0].innerText=texts[lang].toggleTheme;
-  btns[1].innerText=texts[lang].newChat;
-  btns[2].innerText=texts[lang].toggleLang;
-}
-
-function addMessage(role,text){
-  const div=document.createElement("div");
-  div.className="message "+role;
-  div.innerText=text;
-  document.getElementById("chatBox").appendChild(div);
-  document.getElementById("chatBox").scrollTop=999999;
-}
-
-async function sendMessage(){
-  const input=document.getElementById("userInput");
-  const message=input.value.trim();
-  if(!message) return;
-  addMessage("user",message);
-  input.value="";
-
-  try{
-    const res=await fetch("https://api.gapgpt.app/v1/chat/completions",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa"
+    const texts = {
+      fa: {
+        placeholder: 'پیام بنویس ...',
+        newChat: '🆕 چت جدید',
+        toggleTheme: '🌗 تغییر تم',
+        toggleLang: '🌐 تغییر زبان',
+        download: '📥 دانلود اپلیکیشن',
+        windows: '🪟 نسخه ویندوز',
+        android: '📱 نسخه اندروید',
+        logo: '✨ NØRΛ ⚡',
+        copy: '📋 کپی',
+        copied: '✅ کپی شد',
       },
-      body:JSON.stringify({
-        model:"gpt-4o",
-        messages:[{role:"user",content:message}]
-      })
-    });
-    const data=await res.json();
-    const reply=data.choices?.[0]?.message?.content || "خطا در دریافت پاسخ";
-    addMessage("bot",reply);
-  }catch(e){
-    addMessage("bot","خطا در ارتباط با سرور");
-    console.error(e);
-  }
-}
-</script>
+      en: {
+        placeholder: 'Type a message...',
+        newChat: '🆕 New Chat',
+        toggleTheme: '🌗 Toggle Theme',
+        toggleLang: '🌐 Change Language',
+        download: '📥 Download App',
+        windows: '🪟 Windows Version',
+        android: '📱 Android Version',
+        logo: '✨ NØRΛ ⚡',
+        copy: '📋 Copy',
+        copied: '✅ Copied',
+      }
+    };
 
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const logoEl = document.getElementById('logoText');
+    const menu = document.getElementById('menu');
+    const downloadSubmenu = document.getElementById('downloadSubmenu');
+    const themeBtn = document.getElementById('themeBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const langBtn = document.getElementById('langBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const windowsBtn = document.getElementById('windowsBtn');
+    const androidBtn = document.getElementById('androidBtn');
+
+    // اعمال زبان
+    function applyUILanguage() {
+      const t = texts[lang];
+      userInput.placeholder = t.placeholder;
+      logoEl.innerText = t.logo;
+      if (themeBtn) themeBtn.innerText = t.toggleTheme;
+      if (newChatBtn) newChatBtn.innerText = t.newChat;
+      if (langBtn) langBtn.innerText = t.toggleLang;
+      if (downloadBtn) downloadBtn.innerText = t.download;
+      if (windowsBtn) windowsBtn.innerText = t.windows;
+      if (androidBtn) androidBtn.innerText = t.android;
+      
+      document.documentElement.lang = lang === 'fa' ? 'fa' : 'en';
+      document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
+      
+      // بروزرسانی دکمه‌های کپی
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.innerText = texts[lang].copy;
+      });
+    }
+
+    // باز کردن لینک دانلود (در تب جدید)
+    window.openDownloadLink = function(platform) {
+      const link = DOWNLOAD_LINKS[platform];
+      if (link) {
+        window.open(link, '_blank');
+      } else {
+        alert( lang === 'fa' ? 'لینک دانلود تنظیم نشده است!' : 'Download link not configured!' );
+      }
+      // بستن منو بعد از کلیک
+      menu.style.display = 'none';
+      menuVisible = false;
+      downloadSubmenuVisible = false;
+    };
+
+    // نمایش/مخفی کردن زیرمنوی دانلود
+    window.toggleDownloadSubmenu = function(event) {
+      event.stopPropagation();
+      downloadSubmenuVisible = !downloadSubmenuVisible;
+      if (downloadSubmenuVisible) {
+        downloadSubmenu.classList.add('show');
+      } else {
+        downloadSubmenu.classList.remove('show');
+      }
+    };
+
+    // منوی اصلی
+    window.toggleMenu = function() {
+      menuVisible = !menuVisible;
+      menu.style.display = menuVisible ? 'flex' : 'none';
+      // وقتی منو بسته میشه زیرمنو هم مخفی شه
+      if (!menuVisible) {
+        downloadSubmenu.classList.remove('show');
+        downloadSubmenuVisible = false;
+      }
+    };
+
+    window.toggleMode = function() {
+      document.body.classList.toggle('light');
+      menu.style.display = 'none'; 
+      menuVisible = false;
+      downloadSubmenu.classList.remove('show');
+      downloadSubmenuVisible = false;
+    };
+
+    window.newChat = function() {
+      chatBox.innerHTML = '';
+      menu.style.display = 'none'; 
+      menuVisible = false;
+      downloadSubmenu.classList.remove('show');
+      downloadSubmenuVisible = false;
+      if (typingIndicatorDiv) hideTypingIndicator();
+    };
+
+    window.toggleLanguage = function() {
+      lang = lang === 'fa' ? 'en' : 'fa';
+      applyUILanguage();
+      menu.style.display = 'none'; 
+      menuVisible = false;
+      downloadSubmenu.classList.remove('show');
+      downloadSubmenuVisible = false;
+    };
+
+    // بستن منو با کلیک خارج
+    document.addEventListener('click', (event) => {
+      if (menuVisible && !event.target.closest('.menu') && !event.target.closest('.menu-btn')) {
+        menu.style.display = 'none';
+        menuVisible = false;
+        downloadSubmenu.classList.remove('show');
+        downloadSubmenuVisible = false;
+      }
+    });
+
+    // کپی کد
+    function setupCopyButtons() {
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.removeEventListener('click', window.copyHandler);
+        btn.addEventListener('click', window.copyHandler = function(e) {
+          e.stopPropagation();
+          const codeId = this.dataset.target;
+          const codeEl = document.getElementById(codeId);
+          if (codeEl) {
+            navigator.clipboard.writeText(codeEl.innerText).then(() => {
+              const originalText = this.innerText;
+              this.innerText = texts[lang].copied;
+              setTimeout(() => { this.innerText = originalText; }, 1500);
+            }).catch(() => alert('خطا در کپی'));
+          }
+        });
+      });
+    }
+
+    // اضافه کردن پیام
+    function addMessage(role, text) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${role}`;
+
+      if (text.includes('```') || text.match(/^\s{4,}/gm) || text.includes('\t')) {
+        let parts = text.split(/(```[\s\S]*?```)/g);
+        parts.forEach(part => {
+          if (part.startsWith('```') && part.endsWith('```')) {
+            const codeContent = part.slice(3, -3).replace(/^[a-z]*\n/, '');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-wrapper';
+            const id = 'code-' + Math.random().toString(36).substring(2, 9);
+            const pre = document.createElement('pre');
+            pre.id = id;
+            pre.textContent = codeContent;
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.dataset.target = id;
+            copyBtn.innerText = texts[lang].copy;
+            wrapper.appendChild(pre);
+            wrapper.appendChild(copyBtn);
+            msgDiv.appendChild(wrapper);
+          } else if (part.trim()) {
+            const textNode = document.createElement('span');
+            textNode.textContent = part;
+            msgDiv.appendChild(textNode);
+          }
+        });
+      } else {
+        msgDiv.textContent = text;
+      }
+
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+      setupCopyButtons();
+    }
+
+    // انیمیشن تایپ
+    function showTypingIndicator() {
+      if (isTyping) return;
+      isTyping = true;
+      typingIndicatorDiv = document.createElement('div');
+      typingIndicatorDiv.className = 'typing-indicator';
+      for (let i = 0; i < 3; i++) {
+        typingIndicatorDiv.appendChild(document.createElement('span'));
+      }
+      chatBox.appendChild(typingIndicatorDiv);
+      chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+    }
+
+    function hideTypingIndicator() {
+      if (typingIndicatorDiv && typingIndicatorDiv.parentNode) {
+        typingIndicatorDiv.remove();
+      }
+      isTyping = false;
+    }
+
+    // ارسال پیام
+    window.sendMessage = async function() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      addMessage('user', message);
+      userInput.value = '';
+      showTypingIndicator();
+
+      try {
+        const response = await fetch('https://api.gapgpt.app/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa'
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: message }]
+          })
+        });
+
+        const data = await response.json();
+        const reply = data.choices?.[0]?.message?.content || '⚠️ بدون پاسخ از سرور.';
+        hideTypingIndicator();
+        addMessage('bot', reply);
+      } catch (error) {
+        hideTypingIndicator();
+        addMessage('bot', '❌ خطا در ارتباط با سرور. اینترنت را بررسی کن.');
+        console.error(error);
+      }
+    };
+
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // مقداردهی اولیه
+    applyUILanguage();
+  })();
+</script>
 </body>
 </html>
