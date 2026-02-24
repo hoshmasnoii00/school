@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Nora AI · پایدار و سریع</title>
+  <title>Nora AI · چت شفاف</title>
   <style>
     /* -------------------- RESET & VARIABLES -------------------- */
     * {
@@ -18,42 +18,48 @@
       /* Dark mode - پس‌زمینه مشکی */
       --bg-start: #000000;
       --bg-end: #0a0a0a;
-      --glass-bg: rgba(20, 20, 30, 0.8);
+      --chat-bg: #000000;
+      --glass-bg: rgba(30, 30, 40, 0.9);
       --glass-blur: 12px;
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.15);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-      --text-primary: #f0f3ff;
-      --text-secondary: #b0c0ff;
+      --text-primary: #ffffff;
+      --text-secondary: #e0e0ff;
       --accent-glow: #00e0ff;
       --accent-glow2: #a06eff;
-      --placeholder: #aab4dd;
+      --placeholder: #a0a0c0;
       --send-btn-bg: rgba(255, 255, 255, 0.1);
-      --message-user-glow: rgba(0, 224, 255, 0.3);
-      --message-bot-glow: rgba(160, 110, 255, 0.4);
-      --header-footer-bg: rgba(0, 0, 0, 0.5);
-      --code-bg: rgba(0, 0, 0, 0.6);
-      --copy-btn-bg: rgba(255,255,255,0.15);
+      --message-user-bg: rgba(0, 100, 255, 0.3);
+      --message-bot-bg: rgba(150, 50, 255, 0.3);
+      --header-footer-bg: rgba(20, 20, 30, 0.8);
+      --code-bg: #1a1a2a;
+      --copy-btn-bg: rgba(255,255,255,0.2);
+      --copy-btn-hover: #00e0ff;
+      --border-light: rgba(255,255,255,0.1);
     }
 
     .light {
-      /* Light mode - پس‌زمینه آبی */
-      --bg-start: #0066cc;
-      --bg-end: #00aaff;
-      --glass-bg: rgba(255, 255, 255, 0.7);
+      /* Light mode - پس‌زمینه سفید */
+      --bg-start: #ffffff;
+      --bg-end: #f5f5ff;
+      --chat-bg: #ffffff;
+      --glass-bg: rgba(255, 255, 255, 0.95);
       --glass-blur: 12px;
-      --glass-border: rgba(255, 255, 255, 0.5);
-      --glass-shadow: 0 8px 32px rgba(0, 100, 255, 0.2);
-      --text-primary: #ffffff;
-      --text-secondary: #e0f0ff;
-      --accent-glow: #ffffff;
-      --accent-glow2: #ffff00;
-      --placeholder: #e0f0ff;
-      --send-btn-bg: rgba(255, 255, 255, 0.3);
-      --message-user-glow: rgba(255, 255, 255, 0.5);
-      --message-bot-glow: rgba(255, 255, 255, 0.5);
-      --header-footer-bg: rgba(0, 100, 200, 0.4);
-      --code-bg: rgba(0, 0, 0, 0.2);
-      --copy-btn-bg: rgba(255, 255, 255, 0.4);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --text-primary: #000000;
+      --text-secondary: #333333;
+      --accent-glow: #0066ff;
+      --accent-glow2: #aa00ff;
+      --placeholder: #666666;
+      --send-btn-bg: rgba(0, 0, 0, 0.05);
+      --message-user-bg: rgba(0, 100, 255, 0.1);
+      --message-bot-bg: rgba(150, 50, 255, 0.1);
+      --header-footer-bg: rgba(255, 255, 255, 0.8);
+      --code-bg: #f0f0f0;
+      --copy-btn-bg: rgba(0, 0, 0, 0.1);
+      --copy-btn-hover: #0066ff;
+      --border-light: rgba(0,0,0,0.1);
     }
 
     body {
@@ -93,7 +99,7 @@
       font-weight: 700;
       font-size: clamp(1.5rem, 6vw, 2.2rem);
       letter-spacing: 2px;
-      background: linear-gradient(145deg, #fff, var(--accent-glow), #f0f);
+      background: linear-gradient(145deg, #fff, var(--accent-glow), var(--accent-glow2));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -102,8 +108,8 @@
       white-space: nowrap;
     }
     @keyframes logoPulse {
-      0% { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow2); opacity: 0.9; }
-      100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow2), 0 0 60px #f0f; opacity: 1; }
+      0% { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow2); }
+      100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow2), 0 0 60px #f0f; }
     }
 
     /* ===== دکمه منو ===== */
@@ -121,6 +127,7 @@
       border: 1px solid var(--glass-border);
       transition: 0.2s;
       flex-shrink: 0;
+      color: var(--text-primary);
     }
     .menu-btn:active {
       transform: scale(0.95);
@@ -184,60 +191,107 @@
     #chatBox {
       flex: 1;
       overflow-y: auto;
-      padding: clamp(15px, 4vw, 20px) clamp(12px, 3vw, 18px);
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: clamp(10px, 2.5vw, 14px);
+      gap: 16px;
       z-index: 5;
       scroll-behavior: smooth;
       direction: ltr;
       -webkit-overflow-scrolling: touch;
+      background-color: var(--chat-bg);
     }
 
+    /* کانتینر هر پیام */
+    .message-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+    }
+
+    .message-wrapper.user {
+      align-items: flex-end;
+    }
+
+    .message-wrapper.bot {
+      align-items: flex-start;
+    }
+
+    /* خود پیام */
     .message {
       max-width: min(85%, 600px);
-      padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 22px);
-      border-radius: clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(10px, 3vw, 12px);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
+      padding: 16px 22px;
+      border-radius: 24px;
       color: var(--text-primary);
-      line-height: 1.5;
+      line-height: 1.6;
       word-break: break-word;
       direction: rtl;
       text-align: start;
-      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+      font-size: 1rem;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-light);
+      margin-bottom: 5px;
     }
 
     .message.user {
-      align-self: flex-end;
-      border-radius: clamp(25px, 5vw, 32px) clamp(25px, 5vw, 32px) clamp(10px, 3vw, 12px) clamp(25px, 5vw, 32px);
-      background: rgba(0, 180, 255, 0.25);
-      box-shadow: 0 0 25px var(--message-user-glow);
+      background: var(--message-user-bg);
+      border-bottom-right-radius: 4px;
     }
 
     .message.bot {
-      align-self: flex-start;
-      background: rgba(160, 110, 255, 0.2);
-      box-shadow: 0 0 25px var(--message-bot-glow);
+      background: var(--message-bot-bg);
+      border-bottom-left-radius: 4px;
+    }
+
+    /* دکمه کپی - کنار هر پیام */
+    .copy-message-btn {
+      background: var(--copy-btn-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: 20px;
+      padding: 6px 15px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      margin-top: 4px;
+      width: fit-content;
+      border: 1px solid var(--border-light);
+    }
+
+    .copy-message-btn:active {
+      background: var(--copy-btn-hover);
+      color: #000;
+      transform: scale(0.95);
+    }
+
+    .message-wrapper.user .copy-message-btn {
+      margin-right: 10px;
+    }
+
+    .message-wrapper.bot .copy-message-btn {
+      margin-left: 10px;
     }
 
     /* انیمیشن تایپ */
     .typing-indicator {
       display: flex;
-      gap: 6px;
-      padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 22px);
-      background: var(--glass-bg);
-      border-radius: 40px;
+      gap: 8px;
+      padding: 16px 24px;
+      background: var(--message-bot-bg);
+      border-radius: 24px;
       width: fit-content;
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--border-light);
+      margin-top: 5px;
     }
     .typing-indicator span {
-      width: clamp(8px, 2vw, 10px);
-      height: clamp(8px, 2vw, 10px);
+      width: 10px;
+      height: 10px;
       background: var(--accent-glow);
       border-radius: 50%;
       opacity: 0.7;
@@ -247,37 +301,41 @@
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typingBounce {
       0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-10px); }
+      30% { transform: translateY(-12px); }
     }
 
-    /* بخش کد */
+    /* بخش کد داخل پیام */
     pre {
       background: var(--code-bg);
-      padding: clamp(12px, 3vw, 15px);
-      border-radius: 20px;
+      padding: 15px;
+      border-radius: 16px;
       overflow-x: auto;
       direction: ltr;
       text-align: left;
       font-family: 'Courier New', monospace;
-      border: 1px solid var(--glass-border);
-      margin: 12px 0 6px;
+      border: 1px solid var(--border-light);
+      margin: 10px 0 5px;
       white-space: pre-wrap;
       word-wrap: break-word;
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
+      font-size: 0.9rem;
+      color: var(--text-primary);
     }
+
     .code-wrapper {
       position: relative;
+      margin: 10px 0;
     }
-    .copy-btn {
+
+    .code-copy-btn {
       position: absolute;
-      top: clamp(5px, 2vw, 10px);
-      left: clamp(5px, 2vw, 10px);
+      top: 8px;
+      left: 8px;
       background: var(--copy-btn-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
-      border-radius: 30px;
-      padding: clamp(4px, 1.5vw, 6px) clamp(10px, 3vw, 16px);
-      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
       cursor: pointer;
       backdrop-filter: blur(8px);
       display: flex;
@@ -286,14 +344,14 @@
       transition: 0.2s;
       z-index: 6;
     }
-    .copy-btn:active {
-      background: var(--accent-glow);
+    .code-copy-btn:active {
+      background: var(--copy-btn-hover);
       color: #000;
     }
 
     /* ===== FOOTER ===== */
     footer {
-      padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 18px);
+      padding: 16px 20px;
       backdrop-filter: blur(var(--glass-blur));
       background: var(--header-footer-bg);
       border-top: 1px solid var(--glass-border);
@@ -306,10 +364,10 @@
     .input-wrapper {
       display: flex;
       align-items: center;
-      gap: clamp(8px, 2vw, 12px);
+      gap: 12px;
       background: var(--glass-bg);
       backdrop-filter: blur(12px);
-      padding: clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(12px, 3vw, 18px);
+      padding: 6px 6px 6px 20px;
       border-radius: 60px;
       border: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
@@ -324,8 +382,8 @@
       outline: none;
       background: transparent;
       color: var(--text-primary);
-      font-size: clamp(1rem, 4vw, 1.1rem);
-      padding: clamp(10px, 2.5vw, 14px) 0;
+      font-size: 1.1rem;
+      padding: 14px 0;
       direction: rtl;
       min-width: 50px;
     }
@@ -334,13 +392,13 @@
     }
 
     button.send-btn {
-      width: clamp(48px, 12vw, 58px);
-      height: clamp(48px, 12vw, 58px);
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       background: var(--send-btn-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
-      font-size: clamp(1.5rem, 5vw, 1.8rem);
+      font-size: 1.8rem;
       cursor: pointer;
       transition: 0.18s;
       backdrop-filter: blur(8px);
@@ -356,7 +414,7 @@
     }
 
     /* اسکرول بار */
-    #chatBox::-webkit-scrollbar { width: 4px; }
+    #chatBox::-webkit-scrollbar { width: 5px; }
     #chatBox::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 20px; }
     
     /* حالت دسکتاپ */
@@ -407,7 +465,7 @@
       android: 'https://nexclex.com/apps/nora-android.apk'
     };
 
-    // کلمات کلیدی برای تشخیص سوالات
+    // کلمات کلیدی
     const KEYWORDS = {
       name: ['اسمت چیه', 'نام تو', 'who are you', 'your name', 'اسم شما', 'چی اسمت'],
       company: ['سازنده', 'شرکت', 'ساخت', 'creator', 'maker', 'company', 'who made', 'تولید', 'تکنو هوش', 'تکنوهوش']
@@ -465,25 +523,121 @@
       document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
     }
 
-    // تشخیص پاسخ اختصاصی
     function getSpecialResponse(message) {
       const msg = message.toLowerCase();
-      
-      // بررسی اسم
       for (let keyword of KEYWORDS.name) {
-        if (msg.includes(keyword)) {
-          return texts[lang].botName;
-        }
+        if (msg.includes(keyword)) return texts[lang].botName;
       }
-      
-      // بررسی شرکت سازنده
       for (let keyword of KEYWORDS.company) {
-        if (msg.includes(keyword)) {
-          return texts[lang].botCompany;
+        if (msg.includes(keyword)) return texts[lang].botCompany;
+      }
+      return null;
+    }
+
+    // کپی متن پیام
+    async function copyMessageText(text, buttonElement) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalText = buttonElement.innerText;
+        buttonElement.innerText = texts[lang].copied;
+        setTimeout(() => {
+          buttonElement.innerText = originalText;
+        }, 1500);
+      } catch (err) {
+        alert('خطا در کپی');
+      }
+    }
+
+    // کپی کد
+    async function copyCodeText(codeId, buttonElement) {
+      const codeEl = document.getElementById(codeId);
+      if (codeEl) {
+        try {
+          await navigator.clipboard.writeText(codeEl.innerText);
+          const originalText = buttonElement.innerText;
+          buttonElement.innerText = texts[lang].copied;
+          setTimeout(() => {
+            buttonElement.innerText = originalText;
+          }, 1500);
+        } catch (err) {
+          alert('خطا در کپی');
         }
       }
+    }
+
+    function addMessage(role, text) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `message-wrapper ${role}`;
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+
+      // پردازش متن برای کد
+      if (text.includes('```')) {
+        let parts = text.split(/(```[\s\S]*?```)/g);
+        parts.forEach(part => {
+          if (part.startsWith('```') && part.endsWith('```')) {
+            const codeContent = part.slice(3, -3).replace(/^[a-z]*\n/, '');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-wrapper';
+            const id = 'code-' + Math.random().toString(36).substring(2, 9);
+            const pre = document.createElement('pre');
+            pre.id = id;
+            pre.textContent = codeContent;
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'code-copy-btn';
+            copyBtn.innerHTML = '📋';
+            copyBtn.onclick = (e) => {
+              e.stopPropagation();
+              copyCodeText(id, copyBtn);
+            };
+            wrapper.appendChild(pre);
+            wrapper.appendChild(copyBtn);
+            messageDiv.appendChild(wrapper);
+          } else if (part.trim()) {
+            const textNode = document.createElement('span');
+            textNode.textContent = part;
+            messageDiv.appendChild(textNode);
+          }
+        });
+      } else {
+        messageDiv.textContent = text;
+      }
+
+      wrapper.appendChild(messageDiv);
+
+      // دکمه کپی برای کل پیام
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-message-btn';
+      copyBtn.innerHTML = '📋 ' + texts[lang].copy;
+      copyBtn.onclick = () => copyMessageText(text, copyBtn);
+      wrapper.appendChild(copyBtn);
+
+      chatBox.appendChild(wrapper);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      if (isTyping) return;
+      isTyping = true;
+      typingIndicatorDiv = document.createElement('div');
+      typingIndicatorDiv.className = 'typing-indicator';
+      for (let i = 0; i < 3; i++) {
+        typingIndicatorDiv.appendChild(document.createElement('span'));
+      }
       
-      return null;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'message-wrapper bot';
+      wrapper.appendChild(typingIndicatorDiv);
+      chatBox.appendChild(wrapper);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      if (typingIndicatorDiv?.parentNode?.parentNode) {
+        typingIndicatorDiv.parentNode.parentNode.remove();
+      }
+      isTyping = false;
     }
 
     window.openDownloadLink = function(platform) {
@@ -537,77 +691,6 @@
       }
     });
 
-    function setupCopyButtons() {
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.onclick = function(e) {
-          e.stopPropagation();
-          const codeId = this.dataset.target;
-          const codeEl = document.getElementById(codeId);
-          if (codeEl) {
-            navigator.clipboard.writeText(codeEl.innerText).then(() => {
-              const original = this.innerText;
-              this.innerText = texts[lang].copied;
-              setTimeout(() => { this.innerText = original; }, 1500);
-            });
-          }
-        };
-      });
-    }
-
-    function addMessage(role, text) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `message ${role}`;
-
-      if (text.includes('```')) {
-        let parts = text.split(/(```[\s\S]*?```)/g);
-        parts.forEach(part => {
-          if (part.startsWith('```') && part.endsWith('```')) {
-            const codeContent = part.slice(3, -3).replace(/^[a-z]*\n/, '');
-            const wrapper = document.createElement('div');
-            wrapper.className = 'code-wrapper';
-            const id = 'code-' + Math.random().toString(36).substring(2, 9);
-            const pre = document.createElement('pre');
-            pre.id = id;
-            pre.textContent = codeContent;
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.dataset.target = id;
-            copyBtn.innerText = texts[lang].copy;
-            wrapper.appendChild(pre);
-            wrapper.appendChild(copyBtn);
-            msgDiv.appendChild(wrapper);
-          } else if (part.trim()) {
-            msgDiv.appendChild(document.createTextNode(part));
-          }
-        });
-      } else {
-        msgDiv.textContent = text;
-      }
-
-      chatBox.appendChild(msgDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      setupCopyButtons();
-    }
-
-    function showTypingIndicator() {
-      if (isTyping) return;
-      isTyping = true;
-      typingIndicatorDiv = document.createElement('div');
-      typingIndicatorDiv.className = 'typing-indicator';
-      for (let i = 0; i < 3; i++) {
-        typingIndicatorDiv.appendChild(document.createElement('span'));
-      }
-      chatBox.appendChild(typingIndicatorDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-      if (typingIndicatorDiv?.parentNode) {
-        typingIndicatorDiv.remove();
-      }
-      isTyping = false;
-    }
-
     window.sendMessage = async function() {
       const message = userInput.value.trim();
       if (!message) return;
@@ -615,7 +698,6 @@
       addMessage('user', message);
       userInput.value = '';
 
-      // بررسی پاسخ اختصاصی
       const specialResponse = getSpecialResponse(message);
       if (specialResponse) {
         setTimeout(() => {
@@ -660,4 +742,4 @@
   })();
 </script>
 </body>
-</html>
+  </html>
