@@ -11,16 +11,21 @@
   --glass: rgba(255,255,255,0.08);
   --border: rgba(255,255,255,0.25);
   --accent:#00f0ff;
+  --placeholder:#aaa;
+  --bg-dark: linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#0f2027);
+  --particle: rgba(255,255,255,0.1);
 }
 
 .light{
   --text:#1a1a1a;
-  --glass: rgba(255,255,255,0.4);
-  --border: rgba(255,255,255,0.7);
+  --glass: rgba(255,255,255,0.15);
+  --border: rgba(0,0,0,0.15);
   --accent:#0077ff;
+  --placeholder:#555;
+  --bg-dark: linear-gradient(-45deg,#d9e6f2,#edf3fb,#e6f0f9,#f1f8ff);
+  --particle: rgba(0,0,0,0.05);
 }
 
-/* Animated Aurora Background */
 body{
   margin:0;
   font-family:system-ui;
@@ -29,14 +34,10 @@ body{
   display:flex;
   flex-direction:column;
   overflow:hidden;
-  background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#0f2027);
+  background:var(--bg-dark);
   background-size:400% 400%;
-  animation:aurora 15s ease infinite;
+  animation:aurora 20s ease infinite;
   transition:0.4s;
-}
-
-.light{
-  background:linear-gradient(-45deg,#dfe9f3,#f5f7fa,#e3f2fd,#f1f8ff);
 }
 
 @keyframes aurora{
@@ -45,15 +46,14 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* Floating particles */
 body::after{
   content:"";
   position:absolute;
   width:200%;
   height:200%;
-  background:radial-gradient(circle,rgba(255,255,255,0.1) 1px,transparent 1px);
+  background:radial-gradient(circle,var(--particle) 1px,transparent 1px);
   background-size:50px 50px;
-  animation:moveParticles 60s linear infinite;
+  animation:moveParticles 80s linear infinite;
   pointer-events:none;
 }
 
@@ -62,16 +62,15 @@ body::after{
   to{transform:translate(-200px,-200px);}
 }
 
-/* Header */
 header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:15px;
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(25px);
   background:var(--glass);
   border-bottom:1px solid var(--border);
-  box-shadow:0 0 30px rgba(0,240,255,0.2);
+  box-shadow:0 0 25px rgba(0,0,0,0.2);
   position:relative;
   z-index:2;
 }
@@ -81,7 +80,6 @@ header{
   letter-spacing:1px;
 }
 
-/* Menu */
 .menu-btn{
   font-size:22px;
   cursor:pointer;
@@ -91,7 +89,7 @@ header{
   position:absolute;
   top:70px;
   right:20px;
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(30px);
   background:var(--glass);
   border-radius:20px;
   padding:15px;
@@ -99,7 +97,7 @@ header{
   flex-direction:column;
   gap:12px;
   border:1px solid var(--border);
-  box-shadow:0 0 40px rgba(0,240,255,0.4);
+  box-shadow:0 0 25px rgba(0,0,0,0.15);
   animation:fadeIn 0.3s ease;
 }
 
@@ -116,17 +114,16 @@ header{
 }
 
 .menu button:hover{
-  box-shadow:0 0 25px var(--accent);
+  box-shadow:0 0 20px var(--accent);
   transform:scale(1.05);
 }
 
-/* Ripple Effect */
 .menu button::after{
   content:"";
   position:absolute;
   width:0;
   height:0;
-  background:rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.2);
   border-radius:50%;
   transform:translate(-50%,-50%);
   top:50%;
@@ -135,11 +132,10 @@ header{
 }
 
 .menu button:active::after{
-  width:200px;
-  height:200px;
+  width:150px;
+  height:150px;
 }
 
-/* Chat */
 #chatBox{
   flex:1;
   overflow-y:auto;
@@ -151,24 +147,23 @@ header{
   margin-bottom:15px;
   padding:15px;
   border-radius:25px;
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(20px);
   background:var(--glass);
   border:1px solid var(--border);
   animation:slideUp 0.4s ease;
 }
 
 .user{
-  box-shadow:0 0 20px rgba(0,240,255,0.4);
+  box-shadow:0 0 15px rgba(0,119,255,0.4);
 }
 
 .bot{
-  box-shadow:0 0 20px rgba(255,0,255,0.4);
+  box-shadow:0 0 15px rgba(255,0,255,0.4);
 }
 
-/* Footer */
 footer{
   padding:15px;
-  backdrop-filter: blur(30px);
+  backdrop-filter: blur(25px);
   background:var(--glass);
   border-top:1px solid var(--border);
   z-index:2;
@@ -180,7 +175,7 @@ footer{
   padding:8px;
   border-radius:30px;
   border:1px solid var(--border);
-  box-shadow:0 0 25px rgba(0,240,255,0.3);
+  box-shadow:0 0 20px rgba(0,0,0,0.1);
 }
 
 input{
@@ -190,6 +185,10 @@ input{
   background:transparent;
   color:var(--text);
   padding:12px;
+}
+
+input::placeholder{
+  color:var(--placeholder);
 }
 
 button.send-btn{
@@ -204,8 +203,8 @@ button.send-btn{
 }
 
 button.send-btn:hover{
-  box-shadow:0 0 30px var(--accent);
-  transform:scale(1.1);
+  box-shadow:0 0 25px var(--accent);
+  transform:scale(1.05);
 }
 
 @keyframes fadeIn{
@@ -223,11 +222,12 @@ button.send-btn:hover{
 <body>
 
 <header>
-<div class="logo">Nora AI</div>
+<div class="logo" id="logoText">Nora AI</div>
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
 <div class="menu" id="menu">
 <button onclick="toggleMode()">🌗 تغییر تم</button>
 <button onclick="newChat()">🆕 چت جدید</button>
+<button onclick="toggleLanguage()">🌐 تغییر زبان</button>
 </div>
 </header>
 
@@ -241,6 +241,24 @@ button.send-btn:hover{
 </footer>
 
 <script>
+let lang="fa";
+const texts={
+  fa:{
+    placeholder:"پیام بنویس...",
+    newChat:"🆕 چت جدید",
+    toggleTheme:"🌗 تغییر تم",
+    toggleLang:"🌐 تغییر زبان",
+    logo:"Nora AI",
+  },
+  en:{
+    placeholder:"Type a message...",
+    newChat:"🆕 New Chat",
+    toggleTheme:"🌗 Toggle Theme",
+    toggleLang:"🌐 Change Language",
+    logo:"Nora AI",
+  }
+};
+
 function toggleMenu(){
   const m=document.getElementById("menu");
   m.style.display=m.style.display==="flex"?"none":"flex";
@@ -254,6 +272,16 @@ function newChat(){
   document.getElementById("chatBox").innerHTML="";
 }
 
+function toggleLanguage(){
+  lang=lang==="fa"?"en":"fa";
+  document.getElementById("userInput").placeholder=texts[lang].placeholder;
+  document.getElementById("logoText").innerText=texts[lang].logo;
+  const btns=document.querySelectorAll(".menu button");
+  btns[0].innerText=texts[lang].toggleTheme;
+  btns[1].innerText=texts[lang].newChat;
+  btns[2].innerText=texts[lang].toggleLang;
+}
+
 function addMessage(role,text){
   const div=document.createElement("div");
   div.className="message "+role;
@@ -262,11 +290,32 @@ function addMessage(role,text){
   document.getElementById("chatBox").scrollTop=999999;
 }
 
-function sendMessage(){
+async function sendMessage(){
   const input=document.getElementById("userInput");
-  if(!input.value.trim())return;
-  addMessage("user",input.value);
+  const message=input.value.trim();
+  if(!message) return;
+  addMessage("user",message);
   input.value="";
+
+  try{
+    const res=await fetch("https://api.gapgpt.app/v1/chat/completions",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa"
+      },
+      body:JSON.stringify({
+        model:"gpt-4o",
+        messages:[{role:"user",content:message}]
+      })
+    });
+    const data=await res.json();
+    const reply=data.choices?.[0]?.message?.content || "خطا در دریافت پاسخ";
+    addMessage("bot",reply);
+  }catch(e){
+    addMessage("bot","خطا در ارتباط با سرور");
+    console.error(e);
+  }
 }
 </script>
 
