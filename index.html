@@ -2,8 +2,8 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Nora AI · ریسپانسیو</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Nora AI · پایدار و سریع</title>
   <style>
     /* -------------------- RESET & VARIABLES -------------------- */
     * {
@@ -11,88 +11,72 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'system-ui', -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     :root {
-      /* Dark mode (پیش‌فرض) */
-      --bg-start: #0b0d1e;
-      --bg-end: #1a1f3a;
-      --glass-bg: rgba(20, 30, 55, 0.4);
-      --glass-blur: 18px;
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      /* Dark mode - بدون ذرات، با رنگهای عمیق */
+      --bg-start: #0c0b1a;
+      --bg-end: #1e1a3a;
+      --glass-bg: rgba(30, 25, 60, 0.7);
+      --glass-blur: 12px;
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       --text-primary: #f0f3ff;
       --text-secondary: #b0c0ff;
       --accent-glow: #00e0ff;
       --accent-glow2: #a06eff;
       --placeholder: #aab4dd;
-      --particle-color: rgba(255, 255, 255, 0.1);
       --send-btn-bg: rgba(255, 255, 255, 0.1);
-      --message-user-glow: rgba(0, 224, 255, 0.4);
-      --message-bot-glow: rgba(160, 110, 255, 0.5);
-      --header-footer-bg: rgba(8, 12, 28, 0.5);
-      --code-bg: rgba(0, 0, 0, 0.3);
-      --copy-btn-bg: rgba(255,255,255,0.1);
+      --message-user-glow: rgba(0, 224, 255, 0.3);
+      --message-bot-glow: rgba(160, 110, 255, 0.4);
+      --header-footer-bg: rgba(15, 12, 30, 0.8);
+      --code-bg: rgba(0, 0, 0, 0.4);
+      --copy-btn-bg: rgba(255,255,255,0.15);
     }
 
     .light {
-      --bg-start: #e2e9ff;
-      --bg-end: #fbe9ff;
-      --glass-bg: rgba(255, 255, 255, 0.55);
-      --glass-blur: 16px;
-      --glass-border: rgba(255, 115, 200, 0.25);
-      --glass-shadow: 0 20px 40px rgba(180, 100, 255, 0.2), 0 0 0 1px rgba(255, 160, 235, 0.5) inset;
+      --bg-start: #d0e0ff;
+      --bg-end: #f5d0ff;
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-blur: 12px;
+      --glass-border: rgba(180, 130, 255, 0.3);
+      --glass-shadow: 0 8px 32px rgba(150, 100, 255, 0.15);
       --text-primary: #1a1035;
       --text-secondary: #452f6b;
       --accent-glow: #c154ff;
       --accent-glow2: #3b8eff;
       --placeholder: #7a6b9a;
-      --particle-color: rgba(170, 90, 255, 0.15);
       --send-btn-bg: rgba(255, 230, 250, 0.7);
-      --message-user-glow: rgba(193, 84, 255, 0.5);
-      --message-bot-glow: rgba(59, 142, 255, 0.5);
-      --header-footer-bg: rgba(255, 240, 250, 0.6);
+      --message-user-glow: rgba(193, 84, 255, 0.4);
+      --message-bot-glow: rgba(59, 142, 255, 0.4);
+      --header-footer-bg: rgba(255, 240, 250, 0.8);
       --code-bg: rgba(240, 230, 255, 0.7);
       --copy-btn-bg: rgba(180, 140, 255, 0.3);
     }
 
     body {
       height: 100vh;
+      height: -webkit-fill-available;
       display: flex;
       flex-direction: column;
-      background: linear-gradient(-45deg, var(--bg-start), var(--bg-end), #212863, #251d47);
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end), #2a2355);
       background-size: 300% 300%;
-      animation: auroraFlow 18s ease infinite;
+      animation: smoothGradient 15s ease infinite;
       color: var(--text-primary);
       transition: background 0.3s, color 0.2s;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       overflow: hidden;
     }
 
-    /* ذرات پس زمینه */
-    body::before {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background-image: radial-gradient(circle at 30% 40%, var(--particle-color) 2px, transparent 2px),
-                        radial-gradient(circle at 80% 70%, var(--particle-color) 1px, transparent 2px),
-                        radial-gradient(circle at 15% 85%, var(--particle-color) 3px, transparent 3px);
-      background-size: 100px 100px, 150px 150px, 200px 200px;
-      animation: driftParticles 60s linear infinite;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @keyframes auroraFlow {
+    @keyframes smoothGradient {
       0% { background-position: 0% 0%; }
       50% { background-position: 100% 100%; }
       100% { background-position: 0% 0%; }
-    }
-
-    @keyframes driftParticles {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      100% { transform: translate(-15%, -10%) rotate(3deg); }
     }
 
     /* ===== HEADER ===== */
@@ -101,30 +85,32 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 22px;
+      padding: 16px 20px;
       backdrop-filter: blur(var(--glass-blur));
       -webkit-backdrop-filter: blur(var(--glass-blur));
       background: var(--header-footer-bg);
       border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+      box-shadow: var(--glass-shadow);
       z-index: 15;
+      flex-shrink: 0;
+      width: 100%;
     }
 
     .logo {
       font-weight: 700;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
       letter-spacing: 2px;
-      background: linear-gradient(145deg, #fff8, var(--accent-glow), #f0f, #aaf0ff);
+      background: linear-gradient(145deg, #fff, var(--accent-glow), #f0f);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 10px #00ffff, 0 0 20px #a06eff, 0 0 40px #ff00c8;
+      text-shadow: 0 0 15px var(--accent-glow);
       animation: logoPulse 3s infinite alternate;
       white-space: nowrap;
     }
     @keyframes logoPulse {
-      0% { text-shadow: 0 0 5px #0ff, 0 0 15px #a06eff, 0 0 30px #f0f; opacity: 0.95; }
-      100% { text-shadow: 0 0 15px #0ff, 0 0 35px #ff80f0, 0 0 60px #3b8eff; opacity: 1; }
+      0% { text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow2); opacity: 0.9; }
+      100% { text-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow2), 0 0 60px #f0f; opacity: 1; }
     }
 
     /* ===== دکمه منو ===== */
@@ -143,9 +129,10 @@
       transition: 0.2s;
       flex-shrink: 0;
     }
-    .menu-btn:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 25px var(--accent-glow);
+    .menu-btn:active {
+      transform: scale(0.95);
+      background: var(--accent-glow);
+      color: #000;
     }
 
     /* ===== منوی اصلی ===== */
@@ -165,14 +152,9 @@
       border: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
       z-index: 25;
-      animation: menuPop 0.25s ease;
-    }
-    @keyframes menuPop {
-      0% { opacity: 0; transform: translateY(-15px) scale(0.95); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .menu > button {
+    .menu > button, .download-submenu button {
       background: rgba(255,255,255,0.08);
       border: 1px solid var(--glass-border);
       padding: clamp(12px, 3vw, 14px) clamp(15px, 4vw, 18px);
@@ -188,13 +170,12 @@
       width: 100%;
       text-align: right;
     }
-    .menu > button:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: var(--accent-glow);
-      box-shadow: 0 0 28px var(--accent-glow);
+    .menu > button:active, .download-submenu button:active {
+      background: var(--accent-glow);
+      color: #000;
+      transform: scale(0.98);
     }
 
-    /* زیرمنوی دانلود */
     .download-submenu {
       display: none;
       flex-direction: column;
@@ -205,28 +186,8 @@
     .download-submenu.show {
       display: flex;
     }
-    .download-submenu button {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--glass-border);
-      padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 18px);
-      border-radius: 25px;
-      font-size: clamp(0.95rem, 3.5vw, 1rem);
-      cursor: pointer;
-      color: var(--text-primary);
-      backdrop-filter: blur(5px);
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-align: right;
-    }
-    .download-submenu button:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: var(--accent-glow2);
-      box-shadow: 0 0 20px var(--accent-glow2);
-    }
 
-    /* ===== CHAT AREA (کاملاً ریسپانسیو) ===== */
+    /* ===== CHAT AREA ===== */
     #chatBox {
       flex: 1;
       overflow-y: auto;
@@ -237,6 +198,7 @@
       z-index: 5;
       scroll-behavior: smooth;
       direction: ltr;
+      -webkit-overflow-scrolling: touch;
     }
 
     .message {
@@ -247,14 +209,12 @@
       -webkit-backdrop-filter: blur(20px);
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+      box-shadow: var(--glass-shadow);
       color: var(--text-primary);
       line-height: 1.5;
       word-break: break-word;
-      animation: messageRise 0.35s ease;
       direction: rtl;
       text-align: start;
-      position: relative;
       font-size: clamp(0.95rem, 3.5vw, 1.1rem);
     }
 
@@ -271,7 +231,7 @@
       box-shadow: 0 0 25px var(--message-bot-glow);
     }
 
-    /* انیمیشن تایپ ریسپانسیو */
+    /* انیمیشن تایپ */
     .typing-indicator {
       display: flex;
       gap: 6px;
@@ -281,7 +241,6 @@
       width: fit-content;
       backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border);
-      margin-bottom: 8px;
     }
     .typing-indicator span {
       width: clamp(8px, 2vw, 10px);
@@ -294,11 +253,11 @@
     .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typingBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30% { transform: translateY(-10px); opacity: 1; background: #fff; }
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
     }
 
-    /* بخش کد ریسپانسیو */
+    /* بخش کد */
     pre {
       background: var(--code-bg);
       padding: clamp(12px, 3vw, 15px);
@@ -334,24 +293,21 @@
       transition: 0.2s;
       z-index: 6;
     }
-    .copy-btn:hover {
+    .copy-btn:active {
       background: var(--accent-glow);
       color: #000;
-      box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    @keyframes messageRise {
-      0% { opacity: 0; transform: translateY(18px) scale(0.97); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ===== FOOTER ریسپانسیو ===== */
+    /* ===== FOOTER ===== */
     footer {
       padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 18px);
       backdrop-filter: blur(var(--glass-blur));
       background: var(--header-footer-bg);
       border-top: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
       z-index: 15;
+      flex-shrink: 0;
+      width: 100%;
     }
 
     .input-wrapper {
@@ -363,7 +319,7 @@
       padding: clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(4px, 1.5vw, 6px) clamp(12px, 3vw, 18px);
       border-radius: 60px;
       border: 1px solid var(--glass-border);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+      box-shadow: var(--glass-shadow);
     }
     .input-wrapper:focus-within {
       box-shadow: 0 0 0 2px var(--accent-glow);
@@ -382,7 +338,6 @@
     }
     input::placeholder {
       color: var(--placeholder);
-      font-size: clamp(0.9rem, 3.5vw, 1rem);
     }
 
     button.send-btn {
@@ -401,53 +356,20 @@
       align-items: center;
       justify-content: center;
     }
-    button.send-btn:hover {
-      transform: scale(1.1) rotate(5deg);
-      border-color: var(--accent-glow);
-      box-shadow: 0 0 30px var(--accent-glow);
+    button.send-btn:active {
+      transform: scale(0.95);
+      background: var(--accent-glow);
+      color: #000;
     }
 
-    /* اسکرول بار اختصاصی */
-    #chatBox::-webkit-scrollbar { 
-      width: 5px; 
-    }
-    #chatBox::-webkit-scrollbar-thumb { 
-      background: var(--accent-glow); 
-      border-radius: 20px; 
-    }
+    /* اسکرول بار */
+    #chatBox::-webkit-scrollbar { width: 4px; }
+    #chatBox::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 20px; }
     
-    /* حالت دسکتاپ (عرض بیشتر از 768px) */
+    /* حالت دسکتاپ */
     @media (min-width: 768px) {
-      .message {
-        max-width: min(70%, 700px);
-      }
-      
-      .menu {
-        left: auto;
-        right: 20px;
-        max-width: 320px;
-      }
-      
-      .logo {
-        font-size: 2rem;
-      }
-    }
-    
-    /* حالت موبایل خیلی کوچک */
-    @media (max-width: 380px) {
-      .logo {
-        font-size: 1.3rem;
-      }
-      
-      .menu-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.6rem;
-      }
-      
-      .message {
-        max-width: 92%;
-      }
+      .message { max-width: min(70%, 700px); }
+      .menu { left: auto; right: 20px; }
     }
   </style>
 </head>
@@ -456,16 +378,12 @@
   <div class="logo" id="logoText">✨ NØRΛ ⚡</div>
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
   
-  <!-- منوی اصلی همبرگری -->
+  <!-- منوی اصلی -->
   <div class="menu" id="menu">
     <button onclick="toggleMode()" id="themeBtn">🌗 تغییر تم</button>
     <button onclick="newChat()" id="newChatBtn">🆕 چت جدید</button>
     <button onclick="toggleLanguage()" id="langBtn">🌐 تغییر زبان</button>
-    
-    <!-- دکمه دانلود -->
     <button onclick="toggleDownloadSubmenu(event)" id="downloadBtn">📥 دانلود اپلیکیشن</button>
-    
-    <!-- زیرمنوی دانلود -->
     <div class="download-submenu" id="downloadSubmenu">
       <button onclick="openDownloadLink('windows')" id="windowsBtn">🪟 نسخه ویندوز</button>
       <button onclick="openDownloadLink('android')" id="androidBtn">📱 نسخه اندروید</button>
@@ -484,7 +402,6 @@
 
 <script>
   (function() {
-    // ---------- وضعیت و ترجمه ----------
     let lang = 'fa';
     let menuVisible = false;
     let downloadSubmenuVisible = false;
@@ -495,6 +412,12 @@
     const DOWNLOAD_LINKS = {
       windows: 'https://nexclex.com/apps/nora-windows.exe',
       android: 'https://nexclex.com/apps/nora-android.apk'
+    };
+
+    // کلمات کلیدی برای تشخیص سوالات
+    const KEYWORDS = {
+      name: ['اسمت چیه', 'نام تو', 'who are you', 'your name', 'اسم شما', 'چی اسمت'],
+      company: ['سازنده', 'شرکت', 'ساخت', 'creator', 'maker', 'company', 'who made', 'تولید', 'تکنو هوش', 'تکنوهوش']
     };
 
     const texts = {
@@ -509,6 +432,8 @@
         logo: '✨ NØRΛ ⚡',
         copy: '📋 کپی',
         copied: '✅ کپی شد',
+        botName: 'من نورا هستم ✨',
+        botCompany: 'من توسط شرکت تکنو هوش ساخته شدم 🏢'
       },
       en: {
         placeholder: 'Type a message...',
@@ -521,6 +446,8 @@
         logo: '✨ NØRΛ ⚡',
         copy: '📋 Copy',
         copied: '✅ Copied',
+        botName: 'I am Nora ✨',
+        botCompany: 'I was created by Techno Hoshmand 🏢'
       }
     };
 
@@ -529,54 +456,55 @@
     const logoEl = document.getElementById('logoText');
     const menu = document.getElementById('menu');
     const downloadSubmenu = document.getElementById('downloadSubmenu');
-    const themeBtn = document.getElementById('themeBtn');
-    const newChatBtn = document.getElementById('newChatBtn');
-    const langBtn = document.getElementById('langBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const windowsBtn = document.getElementById('windowsBtn');
-    const androidBtn = document.getElementById('androidBtn');
 
-    // اعمال زبان
     function applyUILanguage() {
       const t = texts[lang];
       userInput.placeholder = t.placeholder;
       logoEl.innerText = t.logo;
-      if (themeBtn) themeBtn.innerText = t.toggleTheme;
-      if (newChatBtn) newChatBtn.innerText = t.newChat;
-      if (langBtn) langBtn.innerText = t.toggleLang;
-      if (downloadBtn) downloadBtn.innerText = t.download;
-      if (windowsBtn) windowsBtn.innerText = t.windows;
-      if (androidBtn) androidBtn.innerText = t.android;
+      document.getElementById('themeBtn').innerText = t.toggleTheme;
+      document.getElementById('newChatBtn').innerText = t.newChat;
+      document.getElementById('langBtn').innerText = t.toggleLang;
+      document.getElementById('downloadBtn').innerText = t.download;
+      document.getElementById('windowsBtn').innerText = t.windows;
+      document.getElementById('androidBtn').innerText = t.android;
       
       document.documentElement.lang = lang === 'fa' ? 'fa' : 'en';
       document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
-      
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.innerText = texts[lang].copy;
-      });
     }
 
-    // باز کردن لینک دانلود
+    // تشخیص پاسخ اختصاصی
+    function getSpecialResponse(message) {
+      const msg = message.toLowerCase();
+      
+      // بررسی اسم
+      for (let keyword of KEYWORDS.name) {
+        if (msg.includes(keyword)) {
+          return texts[lang].botName;
+        }
+      }
+      
+      // بررسی شرکت سازنده
+      for (let keyword of KEYWORDS.company) {
+        if (msg.includes(keyword)) {
+          return texts[lang].botCompany;
+        }
+      }
+      
+      return null;
+    }
+
     window.openDownloadLink = function(platform) {
       const link = DOWNLOAD_LINKS[platform];
-      if (link) {
-        window.open(link, '_blank');
-      } else {
-        alert( lang === 'fa' ? 'لینک دانلود تنظیم نشده است!' : 'Download link not configured!' );
-      }
-      menu.style.display = 'none';
-      menuVisible = false;
-      downloadSubmenuVisible = false;
+      if (link) window.open(link, '_blank');
+      closeAllMenus();
     };
 
-    // نمایش/مخفی کردن زیرمنوی دانلود
     window.toggleDownloadSubmenu = function(event) {
       event.stopPropagation();
       downloadSubmenuVisible = !downloadSubmenuVisible;
       downloadSubmenu.classList.toggle('show', downloadSubmenuVisible);
     };
 
-    // منوی اصلی
     window.toggleMenu = function() {
       menuVisible = !menuVisible;
       menu.style.display = menuVisible ? 'flex' : 'none';
@@ -586,67 +514,58 @@
       }
     };
 
-    window.toggleMode = function() {
-      document.body.classList.toggle('light');
-      menu.style.display = 'none'; 
+    function closeAllMenus() {
+      menu.style.display = 'none';
       menuVisible = false;
       downloadSubmenu.classList.remove('show');
       downloadSubmenuVisible = false;
+    }
+
+    window.toggleMode = function() {
+      document.body.classList.toggle('light');
+      closeAllMenus();
     };
 
     window.newChat = function() {
       chatBox.innerHTML = '';
-      menu.style.display = 'none'; 
-      menuVisible = false;
-      downloadSubmenu.classList.remove('show');
-      downloadSubmenuVisible = false;
+      closeAllMenus();
       if (typingIndicatorDiv) hideTypingIndicator();
     };
 
     window.toggleLanguage = function() {
       lang = lang === 'fa' ? 'en' : 'fa';
       applyUILanguage();
-      menu.style.display = 'none'; 
-      menuVisible = false;
-      downloadSubmenu.classList.remove('show');
-      downloadSubmenuVisible = false;
+      closeAllMenus();
     };
 
-    // بستن منو با کلیک خارج
     document.addEventListener('click', (event) => {
       if (menuVisible && !event.target.closest('.menu') && !event.target.closest('.menu-btn')) {
-        menu.style.display = 'none';
-        menuVisible = false;
-        downloadSubmenu.classList.remove('show');
-        downloadSubmenuVisible = false;
+        closeAllMenus();
       }
     });
 
-    // کپی کد
     function setupCopyButtons() {
       document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.removeEventListener('click', window.copyHandler);
-        btn.addEventListener('click', window.copyHandler = function(e) {
+        btn.onclick = function(e) {
           e.stopPropagation();
           const codeId = this.dataset.target;
           const codeEl = document.getElementById(codeId);
           if (codeEl) {
             navigator.clipboard.writeText(codeEl.innerText).then(() => {
-              const originalText = this.innerText;
+              const original = this.innerText;
               this.innerText = texts[lang].copied;
-              setTimeout(() => { this.innerText = originalText; }, 1500);
-            }).catch(() => alert('خطا در کپی'));
+              setTimeout(() => { this.innerText = original; }, 1500);
+            });
           }
-        });
+        };
       });
     }
 
-    // اضافه کردن پیام
     function addMessage(role, text) {
       const msgDiv = document.createElement('div');
       msgDiv.className = `message ${role}`;
 
-      if (text.includes('```') || text.match(/^\s{4,}/gm) || text.includes('\t')) {
+      if (text.includes('```')) {
         let parts = text.split(/(```[\s\S]*?```)/g);
         parts.forEach(part => {
           if (part.startsWith('```') && part.endsWith('```')) {
@@ -665,9 +584,7 @@
             wrapper.appendChild(copyBtn);
             msgDiv.appendChild(wrapper);
           } else if (part.trim()) {
-            const textNode = document.createElement('span');
-            textNode.textContent = part;
-            msgDiv.appendChild(textNode);
+            msgDiv.appendChild(document.createTextNode(part));
           }
         });
       } else {
@@ -675,11 +592,10 @@
       }
 
       chatBox.appendChild(msgDiv);
-      chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+      chatBox.scrollTop = chatBox.scrollHeight;
       setupCopyButtons();
     }
 
-    // انیمیشن تایپ
     function showTypingIndicator() {
       if (isTyping) return;
       isTyping = true;
@@ -689,23 +605,32 @@
         typingIndicatorDiv.appendChild(document.createElement('span'));
       }
       chatBox.appendChild(typingIndicatorDiv);
-      chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function hideTypingIndicator() {
-      if (typingIndicatorDiv && typingIndicatorDiv.parentNode) {
+      if (typingIndicatorDiv?.parentNode) {
         typingIndicatorDiv.remove();
       }
       isTyping = false;
     }
 
-    // ارسال پیام
     window.sendMessage = async function() {
       const message = userInput.value.trim();
       if (!message) return;
 
       addMessage('user', message);
       userInput.value = '';
+
+      // بررسی پاسخ اختصاصی
+      const specialResponse = getSpecialResponse(message);
+      if (specialResponse) {
+        setTimeout(() => {
+          addMessage('bot', specialResponse);
+        }, 500);
+        return;
+      }
+
       showTypingIndicator();
 
       try {
@@ -722,13 +647,12 @@
         });
 
         const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || '⚠️ بدون پاسخ از سرور.';
+        const reply = data.choices?.[0]?.message?.content || '⚠️ بدون پاسخ';
         hideTypingIndicator();
         addMessage('bot', reply);
       } catch (error) {
         hideTypingIndicator();
-        addMessage('bot', '❌ خطا در ارتباط با سرور.');
-        console.error(error);
+        addMessage('bot', '❌ خطا در ارتباط');
       }
     };
 
@@ -739,21 +663,6 @@
       }
     });
 
-    // تشخیص اندازه صفحه و اعمال کلاس خاص (اختیاری)
-    function checkScreenSize() {
-      if (window.innerWidth >= 768) {
-        document.body.classList.add('desktop-mode');
-        document.body.classList.remove('mobile-mode');
-      } else {
-        document.body.classList.add('mobile-mode');
-        document.body.classList.remove('desktop-mode');
-      }
-    }
-    
-    window.addEventListener('resize', checkScreenSize);
-    checkScreenSize();
-    
-    // مقداردهی اولیه
     applyUILanguage();
   })();
 </script>
