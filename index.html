@@ -1,136 +1,236 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html lang="fa">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tekno hosh</title>
+
 <style>
-/* ===== TEKNO HOSH NEO THEME ===== */
-body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:#0f0f1a;color:white;overflow-x:hidden;}
-body.techno-light{background:#f4f6ff;color:#111;}
-body::before{content:"";position:fixed;width:200%;height:200%;background:radial-gradient(#00f2ff22 1px,transparent 1px);background-size:40px 40px;animation:moveBg 20s linear infinite;z-index:-1;}
-@keyframes moveBg{from{transform:translate(0,0);}to{transform:translate(-200px,-200px);}}
-.chat-container{width:95%;max-width:900px;margin:20px auto;background:rgba(0,0,0,0.1);border-radius:25px;padding:10px;box-shadow:0 20px 50px rgba(0,0,0,0.7);}
-.header{display:flex;justify-content:center;align-items:center;padding:15px;}
-.logo{font-size:24px;font-weight:bold;color:#00f2ff;letter-spacing:2px;animation:glow 1.5s infinite alternate;text-align:center;}
-.logo span{color:#ff00ff;}
-@keyframes glow{from{text-shadow:0 0 10px #00f2ff;}to{text-shadow:0 0 30px #00f2ff,0 0 50px #007bff;}}
-.messages{max-height:60vh;overflow-y:auto;padding:15px;}
-.message{margin-bottom:15px;display:flex;}
-.user-message{justify-content:flex-end;}
-.ai-message{justify-content:flex-start;}
-.message-content{max-width:70%;padding:12px 18px;border-radius:18px;font-size:15px;line-height:1.6;animation:messageEnter 0.5s ease;}
-.user-message .message-content{background:linear-gradient(135deg,#00f2ff,#007bff);color:white;}
-.ai-message .message-content{background:rgba(255,255,255,0.1);color:white;}
-@keyframes messageEnter{from{opacity:0;transform:translateY(20px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
-.input-area{display:flex;align-items:center;gap:10px;margin-top:10px;position:relative;}
-.input-area textarea{flex:1;padding:12px;border-radius:15px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:white;resize:none;}
-#sendBtn{padding:12px 20px;border:none;border-radius:15px;font-weight:bold;background:linear-gradient(135deg,#00f2ff,#007bff);color:white;cursor:pointer;transition:0.3s;}
-#sendBtn:hover{transform:translateY(-2px);box-shadow:0 0 25px #00f2ff;}
-.input-controls{display:flex;flex-direction:row;gap:8px;position:absolute;right:10px;bottom:0;}
-#themeToggle,#langToggle{padding:6px 12px;border:none;border-radius:25px;cursor:pointer;font-weight:bold;background:#00f2ff;box-shadow:0 0 15px #00f2ff;transition:0.3s;}
-#themeToggle:hover,#langToggle:hover{transform:scale(1.1);box-shadow:0 0 25px #00f2ff;}
-#loadingSpinner{display:none;text-align:center;margin:10px 0;opacity:0.7;}
-@media(max-width:600px){.message-content{max-width:90%;}.input-area{flex-direction:column;align-items:stretch;}.input-controls{position:static;justify-content:flex-end;margin-top:5px;}}
+:root{
+  --bg:#0f172a;
+  --panel:#1e293b;
+  --text:#e2e8f0;
+  --accent:#00f0ff;
+}
+.light{
+  --bg:#f1f5f9;
+  --panel:#e2e8f0;
+  --text:#0f172a;
+  --accent:#0ea5e9;
+}
+body{
+  margin:0;
+  font-family:system-ui;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+header{
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--panel);
+}
+.logo{
+  font-weight:bold;
+  font-size:18px;
+}
+.controls button{
+  margin-left:5px;
+}
+button{
+  padding:6px 10px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:black;
+  cursor:pointer;
+}
+#chatBox{
+  flex:1;
+  overflow-y:auto;
+  padding:15px;
+}
+.message{
+  margin-bottom:15px;
+  padding:10px;
+  border-radius:12px;
+  background:var(--panel);
+  position:relative;
+}
+.user{ background:#334155;}
+.bot{ background:#1e293b;}
+.copyBtn{
+  position:absolute;
+  top:5px;
+  right:5px;
+  font-size:12px;
+  cursor:pointer;
+}
+pre{
+  background:#111827;
+  padding:10px;
+  border-radius:8px;
+  overflow:auto;
+}
+input{
+  padding:12px;
+  border:none;
+  outline:none;
+  width:100%;
+  background:var(--panel);
+  color:var(--text);
+}
+footer{
+  display:flex;
+}
 </style>
 </head>
-<body class="techno-dark">
-<div class="chat-container">
-    <div class="header">
-        <div class="logo" id="logo">⚡ tekno <span>hosh</span></div>
-    </div>
-    <div class="messages" id="messages"></div>
-    <div class="input-area">
-        <textarea id="userInput" placeholder="پیام خود را بنویسید..." rows="1"></textarea>
-        <button id="sendBtn">ارسال</button>
-        <div class="input-controls">
-            <button id="themeToggle">🌙</button>
-            <button id="langToggle">FA</button>
-        </div>
-    </div>
-    <div id="loadingSpinner">⏳ tekno hosh is thinking...</div>
+<body>
+
+<header>
+<div class="logo" id="logo">tekno hosh</div>
+<div class="controls">
+<button onclick="toggleMode()">🌗</button>
+<button onclick="toggleLang()">🌍</button>
+<button onclick="setMode('chat')">Chat</button>
+<button onclick="setMode('image')">Image</button>
 </div>
+</header>
+
+<div id="chatBox"></div>
+
+<footer>
+<input id="userInput" placeholder="پیام بنویس...">
+<button onclick="sendMessage()">➤</button>
+</footer>
+
 <script>
-const API_URL = "https://api.gapgpt.app/v1/chat/completions";
-const MODEL = "gpt-4o";
-let API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa"; // <-- api
-const messagesDiv = document.getElementById("messages");
-const input = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
-const spinner = document.getElementById("loadingSpinner");
-const logo = document.getElementById("logo");
+const API_KEY = "PUT_YOUR_GAPGPT_API_KEY_HERE";
+const GAPGPT_URL = "https://api.gapgpt.app/v1/chat/completions";
 
-let messages = [{role:"system",content:"تو یک دستیار مفید و دوستانه هستی."}];
+const IMAGE_API_URL = ""; // ← اینو خودت بزار
+const IMAGE_API_KEY = ""; // ← اینو خودت بزار
 
-let currentLang = "fa";
-const translations = {
-    fa:{placeholder:"پیام خود را بنویسید...",send:"ارسال",logo:"⚡ تکنو هوش"},
-    en:{placeholder:"Type your message...",send:"Send",logo:"⚡ tekno hosh"}
-};
-
-function updateLanguage(){
-    input.placeholder = translations[currentLang].placeholder;
-    sendBtn.textContent = translations[currentLang].send;
-    document.getElementById("langToggle").textContent = currentLang==="fa"?"EN":"FA";
-    logo.textContent = translations[currentLang].logo;
-}
-document.getElementById("langToggle").onclick = ()=>{
-    currentLang = currentLang==="fa"?"en":"fa";
-    updateLanguage();
-};
-updateLanguage();
-
-document.getElementById("themeToggle").onclick = ()=>{
-    document.body.classList.toggle("techno-light");
-    document.body.classList.toggle("techno-dark");
-    document.getElementById("themeToggle").textContent = document.body.classList.contains("techno-dark")?"🌙":"☀️";
-};
-
-function typeEffect(element,text,speed=20){
-    element.textContent="";
-    let i=0;
-    spinner.style.display="block";
-    const interval=setInterval(()=>{
-        element.textContent+=text[i];
-        i++;
-        if(i>=text.length){clearInterval(interval);spinner.style.display="none";}
-    },speed);
+let currentMode="chat";
+let messages=[];
+let userId = localStorage.getItem("teknoUserId");
+if(!userId){
+  userId="user_"+Math.random().toString(36).substring(2);
+  localStorage.setItem("teknoUserId",userId);
 }
 
-function addMessage(text,sender){
+function saveMessages(){
+  localStorage.setItem("tekno_"+userId,JSON.stringify(messages));
+}
+function loadMessages(){
+  const saved=localStorage.getItem("tekno_"+userId);
+  if(saved){
+    messages=JSON.parse(saved);
+    render();
+  }
+}
+function render(){
+  const box=document.getElementById("chatBox");
+  box.innerHTML="";
+  messages.forEach(m=>{
     const div=document.createElement("div");
-    div.className="message "+(sender==="user"?"user-message":"ai-message");
-    const bubble=document.createElement("div");
-    bubble.className="message-content";
-    div.appendChild(bubble);
-    messagesDiv.appendChild(div);
-    messagesDiv.scrollTop=messagesDiv.scrollHeight;
-    if(sender==="assistant") typeEffect(bubble,text);
-    else bubble.textContent=text;
+    div.className="message "+m.role;
+    div.innerHTML=formatMessage(m.text);
+    addCopy(div,m.text);
+    box.appendChild(div);
+  });
+  box.scrollTop=box.scrollHeight;
 }
-
+function formatMessage(text){
+  if(text.includes("```")){
+    return text.replace(/```(.*?)```/gs,
+      `<pre><code>$1</code></pre>`
+    );
+  }
+  return text;
+}
+function addCopy(div,text){
+  const btn=document.createElement("span");
+  btn.innerText="📋";
+  btn.className="copyBtn";
+  btn.onclick=()=>navigator.clipboard.writeText(text);
+  div.appendChild(btn);
+}
+function addMessage(role,text){
+  messages.push({role,text});
+  render();
+  saveMessages();
+}
 async function sendMessage(){
-    const msg=input.value.trim();
-    if(!msg) return;
-    addMessage(msg,"user");
-    input.value="";
-    messages.push({role:"user",content:msg});
-    spinner.style.display="block";
-    try{
-        const res=await fetch(API_URL,{
-            method:"POST",
-            headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
-            body:JSON.stringify({model:MODEL,messages:messages,temperature:0.7})
-        });
-        const data=await res.json();
-        const aiMsg=data.choices[0].message.content;
-        addMessage(aiMsg,"assistant");
-        messages.push({role:"assistant",content:aiMsg});
-    }catch(err){addMessage("❌ خطا: "+err.message,"assistant");spinner.style.display="none";}
+  const input=document.getElementById("userInput");
+  const msg=input.value.trim();
+  if(!msg)return;
+  addMessage("user",msg);
+  input.value="";
+  if(currentMode==="chat"){
+    await sendChat(msg);
+  }else{
+    await generateImage(msg);
+  }
 }
-
-sendBtn.addEventListener("click",sendMessage);
-input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
+async function sendChat(msg){
+  addMessage("bot","⏳...");
+  const res=await fetch(GAPGPT_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+API_KEY
+    },
+    body:JSON.stringify({
+      model:"gpt-4o",
+      messages:[{role:"user",content:msg}]
+    })
+  });
+  const data=await res.json();
+  messages.pop();
+  addMessage("bot",data.choices[0].message.content);
+}
+async function generateImage(prompt){
+  addMessage("bot","🎨 در حال ساخت تصویر...");
+  const res=await fetch(IMAGE_API_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+IMAGE_API_KEY
+    },
+    body:JSON.stringify({prompt})
+  });
+  const blob=await res.blob();
+  const url=URL.createObjectURL(blob);
+  messages.pop();
+  addMessage("bot",`<img src="${url}" style="max-width:100%"><br><a href="${url}" download>⬇ دانلود تصویر</a>`);
+}
+function setMode(m){currentMode=m;}
+function toggleMode(){
+  document.body.classList.toggle("light");
+}
+function toggleLang(){
+  const logo=document.getElementById("logo");
+  if(logo.innerText==="tekno hosh"){
+    logo.innerText="تکنو هوش";
+    document.getElementById("userInput").placeholder="پیام بنویس...";
+  }else{
+    logo.innerText="tekno hosh";
+    document.getElementById("userInput").placeholder="Type a message...";
+  }
+}
+document.getElementById("userInput")
+.addEventListener("keypress",e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    sendMessage();
+  }
+});
+loadMessages();
 </script>
 </body>
 </html>
