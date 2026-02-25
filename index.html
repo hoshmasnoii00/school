@@ -6,131 +6,206 @@
 <title>Country AI</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+:root{
+--bg:#343541;
+--sidebar:#202123;
+--panel:#40414f;
+--text:#ffffff;
+--sub:#8e8ea0;
+--border:#565869;
+--accent:#19c37d;
+}
+
+.light{
+--bg:#ffffff;
+--sidebar:#f7f7f8;
+--panel:#f0f0f0;
+--text:#000000;
+--sub:#555;
+--border:#ddd;
+--accent:#19c37d;
 }
 
 body{
-background:#343541;
-color:#fff;
+background:var(--bg);
+color:var(--text);
 height:100vh;
 display:flex;
-flex-direction:column
+flex-direction:column;
+transition:.2s;
 }
 
+/* ===== Header ===== */
 header{
-padding:16px;
-text-align:center;
-font-weight:600;
-font-size:18px;
-border-bottom:1px solid #444654;
-background:#202123
+background:var(--sidebar);
+padding:14px 18px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid var(--border);
 }
 
+.menu-btn{
+background:none;
+border:none;
+color:var(--text);
+font-size:22px;
+cursor:pointer;
+}
+
+.logo{
+font-weight:600;
+}
+
+/* ===== Sidebar ===== */
+.sidebar{
+position:fixed;
+top:0;
+right:-260px;
+width:260px;
+height:100%;
+background:var(--sidebar);
+border-left:1px solid var(--border);
+transition:.3s;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:20px;
+z-index:1000;
+}
+
+.sidebar.active{right:0}
+
+.overlay{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.4);
+opacity:0;
+visibility:hidden;
+transition:.2s;
+}
+
+.overlay.active{
+opacity:1;
+visibility:visible;
+}
+
+/* ===== Theme Switch ===== */
+.theme-toggle{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:var(--panel);
+padding:10px 14px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+}
+
+/* ===== History ===== */
+.history{
+flex:1;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.history-item{
+background:var(--panel);
+padding:8px 12px;
+border-radius:6px;
+font-size:13px;
+cursor:pointer;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+/* ===== Chat Area ===== */
 main{
 flex:1;
 overflow-y:auto;
-padding:20px 0;
 display:flex;
-flex-direction:column;
-align-items:center
+justify-content:center;
+padding:30px 15px;
 }
 
 .chat-container{
 width:100%;
-max-width:800px;
+max-width:750px;
 display:flex;
 flex-direction:column;
-gap:20px;
-padding:0 20px
-}
-
-.message-wrapper{
-width:100%;
-display:flex
-}
-
-.message-wrapper.user{
-justify-content:flex-end
-}
-
-.message-wrapper.bot{
-justify-content:flex-start
+gap:22px;
 }
 
 .message{
-padding:14px 18px;
-border-radius:8px;
-max-width:80%;
-line-height:1.6;
-font-size:15px
+line-height:1.7;
+font-size:15px;
+white-space:pre-wrap;
 }
 
-.message-wrapper.user .message{
-background:#444654
+.user{
+text-align:left;
 }
 
-.message-wrapper.bot .message{
-background:#3e3f4b
+.bot{
+text-align:right;
 }
 
+/* ===== Input Panel ===== */
 footer{
 padding:16px;
-background:#343541;
-border-top:1px solid #444654;
 display:flex;
-justify-content:center
+justify-content:center;
+border-top:1px solid var(--border);
+background:var(--bg);
 }
 
-.input-area{
+.input-wrapper{
 width:100%;
-max-width:800px;
+max-width:750px;
+background:var(--panel);
+border-radius:14px;
 display:flex;
-background:#40414f;
-border-radius:8px;
-padding:10px;
-align-items:center
+align-items:center;
+padding:8px 12px;
 }
 
-.input-area input{
+.input-wrapper input{
 flex:1;
-background:transparent;
+background:none;
 border:none;
-color:#fff;
+outline:none;
+color:var(--text);
 font-size:15px;
-outline:none
 }
 
-.input-area input::placeholder{
-color:#8e8ea0
+.input-wrapper input::placeholder{
+color:var(--sub);
 }
 
 .send-btn{
-background:transparent;
+background:var(--accent);
 border:none;
-color:#19c37d;
-font-size:22px;
+width:38px;
+height:38px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
 cursor:pointer;
-padding:8px 12px
+font-size:18px;
 }
 
-.send-btn:hover{
-opacity:.7
-}
-
-.chat-start{
-text-align:center;
-color:#8e8ea0;
-margin-top:40px
-}
+.send-btn:hover{opacity:.8}
 
 @media(max-width:600px){
-.message{
-max-width:95%
-}
+.chat-container{gap:16px}
 }
 </style>
 </head>
@@ -138,54 +213,86 @@ max-width:95%
 <body>
 
 <header>
-Country AI
+<button class="menu-btn" id="menuBtn">☰</button>
+<div class="logo">Country AI</div>
+<div style="width:22px"></div>
 </header>
+
+<div class="sidebar" id="sidebar">
+<div class="theme-toggle" id="themeToggle">
+<span>تغییر تم</span>
+<span>🌓</span>
+</div>
+<div class="history" id="historyList"></div>
+</div>
+
+<div class="overlay" id="overlay"></div>
 
 <main>
 <div class="chat-container" id="chatContainer"></div>
 </main>
 
 <footer>
-<div class="input-area">
+<div class="input-wrapper">
 <input type="text" placeholder="پیام خود را بنویسید..." id="userInput">
 <button class="send-btn" id="sendBtn">↑</button>
 </div>
 </footer>
 
 <script>
-// ===== API (بدون تغییر) =====
+// ===== API (دست نخورده) =====
 const API_URL = "https://api.gapgpt.app/v1/chat/completions";
 const API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa";
 
-let chats = [];
-let currentId = null;
+let chats=[];
+let currentId=null;
+
+function save(){
+localStorage.setItem("chats",JSON.stringify(chats));
+localStorage.setItem("currentId",currentId);
+}
 
 function newChat(){
-const chat={id:Date.now()+'',messages:[]};
-chats=[chat];
+const chat={id:Date.now()+'',messages:[],title:"چت جدید"};
+chats.unshift(chat);
 currentId=chat.id;
+save();
 renderChat();
+renderHistory();
 }
 
 function renderChat(){
 const chat=chats.find(c=>c.id===currentId);
-const container=document.getElementById('chatContainer');
-if(!chat)return;
-container.innerHTML='';
-if(chat.messages.length===0){
-container.innerHTML='<div class="chat-start">شروع گفتگو...</div>';
-}else{
-chat.messages.forEach(m=>{
-const wrap=document.createElement('div');
-wrap.className=`message-wrapper ${m.type}`;
-const msg=document.createElement('div');
-msg.className="message";
-msg.textContent=m.text;
-wrap.appendChild(msg);
-container.appendChild(wrap);
-});
+const box=document.getElementById("chatContainer");
+box.innerHTML="";
+if(!chat || chat.messages.length===0){
+box.innerHTML="<div style='text-align:center;color:var(--sub)'>شروع گفتگو...</div>";
+return;
 }
-container.scrollTop=container.scrollHeight;
+chat.messages.forEach(m=>{
+const div=document.createElement("div");
+div.className="message "+m.type;
+div.textContent=m.text;
+box.appendChild(div);
+});
+box.scrollTop=box.scrollHeight;
+}
+
+function renderHistory(){
+const list=document.getElementById("historyList");
+list.innerHTML="";
+chats.forEach(c=>{
+const item=document.createElement("div");
+item.className="history-item";
+item.textContent=c.title;
+item.onclick=()=>{
+currentId=c.id;
+save();
+renderChat();
+closeSidebar();
+};
+list.appendChild(item);
+});
 }
 
 async function sendToAPI(message){
@@ -203,33 +310,59 @@ messages:[{role:"user",content:message}]
 });
 const data=await res.json();
 return data.choices?.[0]?.message?.content || "⚠️ بدون پاسخ";
-}catch(e){
+}catch{
 return "❌ خطا در ارتباط با سرور";
 }
 }
 
 async function sendMessage(){
-const input=document.getElementById('userInput');
+const input=document.getElementById("userInput");
 const text=input.value.trim();
 if(!text)return;
 const chat=chats.find(c=>c.id===currentId);
-chat.messages.push({type:'user',text});
-input.value='';
+chat.messages.push({type:"user",text});
+if(chat.messages.length===1)
+chat.title=text.slice(0,20);
+input.value="";
 renderChat();
 const response=await sendToAPI(text);
-chat.messages.push({type:'bot',text:response});
+chat.messages.push({type:"bot",text:response});
+save();
 renderChat();
+renderHistory();
 }
 
-document.getElementById('sendBtn').onclick=sendMessage;
-document.getElementById('userInput').onkeypress=(e)=>{
-if(e.key==='Enter'){
-e.preventDefault();
-sendMessage();
-}
+document.getElementById("sendBtn").onclick=sendMessage;
+document.getElementById("userInput").onkeypress=e=>{
+if(e.key==="Enter"){e.preventDefault();sendMessage();}
 };
 
-newChat();
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("overlay");
+
+document.getElementById("menuBtn").onclick=()=>{
+sidebar.classList.add("active");
+overlay.classList.add("active");
+};
+
+function closeSidebar(){
+sidebar.classList.remove("active");
+overlay.classList.remove("active");
+}
+
+overlay.onclick=closeSidebar;
+
+document.getElementById("themeToggle").onclick=()=>{
+document.body.classList.toggle("light");
+};
+
+if(localStorage.getItem("chats")){
+chats=JSON.parse(localStorage.getItem("chats"));
+currentId=localStorage.getItem("currentId");
+}
+
+if(!chats.length)newChat();
+else{renderChat();renderHistory();}
 </script>
 
 </body>
