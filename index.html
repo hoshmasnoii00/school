@@ -35,10 +35,20 @@ footer{border-top:1px solid var(--border);border-bottom:none;padding:12px 18px}
 .backdrop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:.2s;z-index:999}
 .backdrop.active{opacity:1;visibility:visible}
 main{flex:1;display:flex;flex-direction:column;max-width:1000px;margin:0 auto;width:100%;padding:20px}
-.chat-container{flex:1;display:flex;flex-direction:column;gap:20px;overflow-y:auto;padding:15px 0}
-.message{max-width:85%;padding:14px 18px;border-radius:24px;font-size:.95rem;line-height:1.5;word-wrap:break-word}
-.message.user{align-self:flex-end;background:var(--user);border:1px solid var(--border);border-bottom-left-radius:6px}
-.message.bot{align-self:flex-start;background:var(--bot);border:1px solid var(--border);border-bottom-right-radius:6px}
+.chat-container{flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding:15px 0}
+.message-wrapper{display:flex;flex-direction:column;max-width:85%}
+.message-wrapper.user{align-self:flex-end}
+.message-wrapper.bot{align-self:flex-start}
+.message{padding:14px 18px;border-radius:24px;font-size:.95rem;line-height:1.5;word-wrap:break-word}
+.message-wrapper.user .message{background:var(--user);border:1px solid var(--border);border-bottom-left-radius:6px}
+.message-wrapper.bot .message{background:var(--bot);border:1px solid var(--border);border-bottom-right-radius:6px}
+.copy-message-btn{background:none;border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:12px;font-size:.8rem;cursor:pointer;width:fit-content;margin-top:4px;transition:.2s}
+.copy-message-btn:hover{background:var(--border)}
+.typing-indicator{display:flex;gap:5px;padding:14px 18px;background:var(--bot);border:1px solid var(--border);border-radius:24px;border-bottom-right-radius:6px}
+.typing-indicator span{width:8px;height:8px;background:var(--text);border-radius:50%;opacity:.6;animation:typing 1.4s infinite}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .input-area{display:flex;gap:8px;background:var(--glass);border:1px solid var(--border);border-radius:40px;padding:6px 6px 6px 18px;backdrop-filter:blur(10px)}
 .input-area input{flex:1;background:none;border:none;color:var(--text);font-size:1rem;padding:12px 0;outline:none}
 .input-area input::placeholder{color:rgba(255,255,255,.5)}
@@ -47,7 +57,7 @@ main{flex:1;display:flex;flex-direction:column;max-width:1000px;margin:0 auto;wi
 .send-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(0,224,255,.4)}
 .chat-start{text-align:center;color:rgba(255,255,255,.5);padding:40px 20px}
 .light .chat-start{color:rgba(0,0,0,.4)}
-@media (max-width:600px){.message{max-width:90%}.menu-overlay{width:85%}}
+@media (max-width:600px){.message-wrapper{max-width:90%}.menu-overlay{width:85%}}
 </style>
 </head>
 <body>
@@ -73,7 +83,6 @@ main{flex:1;display:flex;flex-direction:column;max-width:1000px;margin:0 auto;wi
 <div class="menu-section">
 <h4>⚙️ تنظیمات</h4>
 <button class="menu-item" id="themeToggle"><span>🌓</span> تم</button>
-<button class="menu-item" id="languageToggle"><span>🌐</span> زبان</button>
 </div>
 </div>
 <div class="backdrop" id="backdrop"></div>
@@ -89,70 +98,160 @@ main{flex:1;display:flex;flex-direction:column;max-width:1000px;margin:0 auto;wi
 </main>
 
 <script>
+// ========== API GapGPT (همون که خودت دادی) ==========
+const API_URL = "https://api.gapgpt.app/v1/chat/completions";
+const API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa";
+
 // ========== تنظیمات ==========
 let theme = localStorage.getItem('theme') || 'dark';
-let lang = localStorage.getItem('lang') || 'fa';
 let chats = JSON.parse(localStorage.getItem('chats')) || [];
 let currentId = localStorage.getItem('currentId') || null;
+let isTyping = false;
+let typingEl = null;
 
 if(theme === 'light') document.body.classList.add('light');
 
-// ========== API واقعی شما ==========
-const API_KEY = 'AIzaSyBils4VH4YqEX9rqiuEvG-fCGAKq3UevQc';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+// ========== توابع پیام ==========
+function addMessage(type, text, chatId = currentId) {
+const chat = chats.find(c => c.id === chatId);
+if(!chat) return;
 
-async function callAI(message) {
+chat.messages.push({type, text});
+
+if(type === 'user' && chat.messages.filter(m => m.type === 'user').length === 1) {
+chat.title = text.length > 25 ? text.slice(0,25)+'...' : text;
+}
+
+save();
+if(chatId === currentId) renderChat();
+}
+
+function addMessageToUI(type, text) {
+const chatBox = document.getElementById('chatContainer');
+const wrap = document.createElement('div');
+wrap.className = `message-wrapper ${type}`;
+
+const msg = document.createElement('div');
+msg.className = "message";
+msg.textContent = text;
+wrap.appendChild(msg);
+
+const btn = document.createElement("button");
+btn.className = "copy-message-btn";
+btn.innerText = "📋 کپی";
+btn.onclick = () => navigator.clipboard.writeText(text);
+wrap.appendChild(btn);
+
+chatBox.appendChild(wrap);
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function showTyping() {
+if(isTyping) return;
+isTyping = true;
+const chatBox = document.getElementById('chatContainer');
+typingEl = document.createElement("div");
+typingEl.className = "message-wrapper bot";
+const box = document.createElement("div");
+box.className = "typing-indicator";
+for(let i = 0; i < 3; i++) box.appendChild(document.createElement("span"));
+typingEl.appendChild(box);
+chatBox.appendChild(typingEl);
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function hideTyping() {
+if(typingEl) typingEl.remove();
+isTyping = false;
+}
+
+// ========== API واقعی ==========
+async function sendToAPI(message) {
 try {
-const res = await fetch(`${API_URL}?key=${API_KEY}`, {
-method: 'POST',
-headers: {'Content-Type': 'application/json'},
+const res = await fetch(API_URL, {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Authorization": `Bearer ${API_KEY}`
+},
 body: JSON.stringify({
-contents: [{
-parts: [{
-text: lang === 'fa' ? 
-`سوال: ${message}\nلطفا به فارسی پاسخ دهید.` : 
-`Question: ${message}\nPlease answer in English.`
-}]
-}]
+model: "gpt-4o",
+messages: [{ role: "user", content: message }]
 })
 });
 const data = await res.json();
-return data.candidates[0].content.parts[0].text;
+return data.choices?.[0]?.message?.content || "⚠️ بدون پاسخ";
 } catch(e) {
-return lang === 'fa' ? 'خطا در ارتباط با سرور' : 'Connection error';
+console.error(e);
+return "❌ خطا در ارتباط با سرور";
 }
 }
 
-// ========== توابع ==========
+// ========== ارسال پیام ==========
+async function sendMessage() {
+const input = document.getElementById('userInput');
+const text = input.value.trim();
+if(!text) return;
+
+const chat = chats.find(c => c.id === currentId);
+if(!chat) return;
+
+input.value = "";
+addMessage('user', text);
+addMessageToUI('user', text);
+showTyping();
+
+const response = await sendToAPI(text);
+hideTyping();
+addMessage('bot', response);
+addMessageToUI('bot', response);
+}
+
+// ========== ذخیره و بازیابی ==========
 function save() {
 localStorage.setItem('chats', JSON.stringify(chats));
 localStorage.setItem('currentId', currentId);
 localStorage.setItem('theme', theme);
-localStorage.setItem('lang', lang);
 }
 
 function newChat() {
-const msg = lang === 'fa' ? 'سلام! چطور میتونم کمک کنم؟' : 'Hello! How can I help?';
 const chat = {
 id: Date.now()+'',
-title: lang === 'fa' ? 'چت جدید' : 'New Chat',
-msg: [{type:'bot', text:msg}]
+title: 'چت جدید',
+messages: []
 };
 chats.unshift(chat);
 currentId = chat.id;
 save();
-render();
+renderChat();
+renderHistory();
 }
 
-function render() {
+function renderChat() {
 const chat = chats.find(c => c.id === currentId);
 const container = document.getElementById('chatContainer');
 if(!chat) { newChat(); return; }
-container.innerHTML = chat.msg.map(m => 
-`<div class="message ${m.type}">${m.text}</div>`
-).join('');
+
+container.innerHTML = '';
+if(chat.messages.length === 0) {
+container.innerHTML = '<div class="chat-start">به Country AI خوش آمدید! سوال خود را بپرسید.</div>';
+} else {
+chat.messages.forEach(m => {
+const wrap = document.createElement('div');
+wrap.className = `message-wrapper ${m.type}`;
+const msg = document.createElement('div');
+msg.className = "message";
+msg.textContent = m.text;
+wrap.appendChild(msg);
+const btn = document.createElement("button");
+btn.className = "copy-message-btn";
+btn.innerText = "📋 کپی";
+btn.onclick = () => navigator.clipboard.writeText(m.text);
+wrap.appendChild(btn);
+container.appendChild(wrap);
+});
+}
 container.scrollTop = container.scrollHeight;
-renderHistory();
 }
 
 function renderHistory() {
@@ -168,7 +267,7 @@ document.querySelectorAll('.history-item').forEach(item => {
 item.addEventListener('click', () => {
 currentId = item.dataset.id;
 save();
-render();
+renderChat();
 closeMenu();
 });
 });
@@ -182,51 +281,27 @@ newChat();
 chats = chats.filter(c => c.id !== id);
 if(currentId === id) currentId = chats[0].id;
 save();
-render();
+renderChat();
+renderHistory();
 }
-}
-
-// ========== ارسال پیام ==========
-async function send() {
-const input = document.getElementById('userInput');
-const text = input.value.trim();
-if(!text) return;
-
-const chat = chats.find(c => c.id === currentId);
-if(!chat) return;
-
-input.value = '';
-chat.msg.push({type:'user', text});
-
-if(chat.msg.filter(m => m.type==='user').length === 1) {
-chat.title = text.length > 25 ? text.slice(0,25)+'...' : text;
-}
-
-render();
-save();
-
-const res = await callAI(text);
-chat.msg.push({type:'bot', text:res});
-save();
-render();
 }
 
 // ========== منو ==========
 const menu = document.getElementById('menuOverlay');
 const backdrop = document.getElementById('backdrop');
+
+function closeMenu() {
+menu.classList.remove('active');
+backdrop.classList.remove('active');
+}
+
 document.getElementById('menuBtn').onclick = () => {
 menu.classList.add('active');
 backdrop.classList.add('active');
 renderHistory();
 };
-document.getElementById('closeMenu').onclick = () => {
-menu.classList.remove('active');
-backdrop.classList.remove('active');
-};
-backdrop.onclick = () => {
-menu.classList.remove('active');
-backdrop.classList.remove('active');
-};
+document.getElementById('closeMenu').onclick = closeMenu;
+backdrop.onclick = closeMenu;
 
 // ========== دکمه‌ها ==========
 document.getElementById('newChatBtnMenu').onclick = () => {
@@ -241,25 +316,18 @@ save();
 closeMenu();
 };
 
-document.getElementById('languageToggle').onclick = () => {
-lang = lang === 'fa' ? 'en' : 'fa';
-document.getElementById('userInput').placeholder = 
-lang === 'fa' ? 'سوال خود را بپرسید...' : 'Ask your question...';
-save();
-closeMenu();
-};
-
-// ========== ارسال ==========
-document.getElementById('sendBtn').onclick = send;
+// ========== رویدادها ==========
+document.getElementById('sendBtn').onclick = sendMessage;
 document.getElementById('userInput').onkeypress = (e) => {
-if(e.key === 'Enter') send();
+if(e.key === 'Enter') {
+e.preventDefault();
+sendMessage();
+}
 };
 
 // ========== شروع ==========
 if(chats.length === 0) newChat();
-else render();
-document.getElementById('userInput').placeholder = 
-lang === 'fa' ? 'سوال خود را بپرسید...' : 'Ask your question...';
+else renderChat();
 </script>
 
 </body>
