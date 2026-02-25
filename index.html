@@ -98,7 +98,7 @@ main{flex:1;display:flex;flex-direction:column;max-width:1000px;margin:0 auto;wi
 </main>
 
 <script>
-// ========== API GapGPT (همون که خودت دادی) ==========
+// ========== API GapGPT ==========
 const API_URL = "https://api.gapgpt.app/v1/chat/completions";
 const API_KEY = "sk-dYCxLxwxD2rzT9NqR9GSSYCx3fRJdpUNejqKsXKTDFpZg2Xa";
 
@@ -111,103 +111,7 @@ let typingEl = null;
 
 if(theme === 'light') document.body.classList.add('light');
 
-// ========== توابع پیام ==========
-function addMessage(type, text, chatId = currentId) {
-const chat = chats.find(c => c.id === chatId);
-if(!chat) return;
-
-chat.messages.push({type, text});
-
-if(type === 'user' && chat.messages.filter(m => m.type === 'user').length === 1) {
-chat.title = text.length > 25 ? text.slice(0,25)+'...' : text;
-}
-
-save();
-if(chatId === currentId) renderChat();
-}
-
-function addMessageToUI(type, text) {
-const chatBox = document.getElementById('chatContainer');
-const wrap = document.createElement('div');
-wrap.className = `message-wrapper ${type}`;
-
-const msg = document.createElement('div');
-msg.className = "message";
-msg.textContent = text;
-wrap.appendChild(msg);
-
-const btn = document.createElement("button");
-btn.className = "copy-message-btn";
-btn.innerText = "📋 کپی";
-btn.onclick = () => navigator.clipboard.writeText(text);
-wrap.appendChild(btn);
-
-chatBox.appendChild(wrap);
-chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function showTyping() {
-if(isTyping) return;
-isTyping = true;
-const chatBox = document.getElementById('chatContainer');
-typingEl = document.createElement("div");
-typingEl.className = "message-wrapper bot";
-const box = document.createElement("div");
-box.className = "typing-indicator";
-for(let i = 0; i < 3; i++) box.appendChild(document.createElement("span"));
-typingEl.appendChild(box);
-chatBox.appendChild(typingEl);
-chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function hideTyping() {
-if(typingEl) typingEl.remove();
-isTyping = false;
-}
-
-// ========== API واقعی ==========
-async function sendToAPI(message) {
-try {
-const res = await fetch(API_URL, {
-method: "POST",
-headers: {
-"Content-Type": "application/json",
-"Authorization": `Bearer ${API_KEY}`
-},
-body: JSON.stringify({
-model: "gpt-4o",
-messages: [{ role: "user", content: message }]
-})
-});
-const data = await res.json();
-return data.choices?.[0]?.message?.content || "⚠️ بدون پاسخ";
-} catch(e) {
-console.error(e);
-return "❌ خطا در ارتباط با سرور";
-}
-}
-
-// ========== ارسال پیام ==========
-async function sendMessage() {
-const input = document.getElementById('userInput');
-const text = input.value.trim();
-if(!text) return;
-
-const chat = chats.find(c => c.id === currentId);
-if(!chat) return;
-
-input.value = "";
-addMessage('user', text);
-addMessageToUI('user', text);
-showTyping();
-
-const response = await sendToAPI(text);
-hideTyping();
-addMessage('bot', response);
-addMessageToUI('bot', response);
-}
-
-// ========== ذخیره و بازیابی ==========
+// ========== توابع کمکی ==========
 function save() {
 localStorage.setItem('chats', JSON.stringify(chats));
 localStorage.setItem('currentId', currentId);
@@ -227,6 +131,7 @@ renderChat();
 renderHistory();
 }
 
+// ========== رندر پیام‌ها ==========
 function renderChat() {
 const chat = chats.find(c => c.id === currentId);
 const container = document.getElementById('chatContainer');
@@ -284,6 +189,80 @@ save();
 renderChat();
 renderHistory();
 }
+}
+
+// ========== تایپینگ ==========
+function showTyping() {
+if(isTyping) return;
+isTyping = true;
+const chatBox = document.getElementById('chatContainer');
+typingEl = document.createElement("div");
+typingEl.className = "message-wrapper bot";
+const box = document.createElement("div");
+box.className = "typing-indicator";
+for(let i = 0; i < 3; i++) box.appendChild(document.createElement("span"));
+typingEl.appendChild(box);
+chatBox.appendChild(typingEl);
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function hideTyping() {
+if(typingEl) typingEl.remove();
+isTyping = false;
+}
+
+// ========== API ==========
+async function sendToAPI(message) {
+try {
+const res = await fetch(API_URL, {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Authorization": `Bearer ${API_KEY}`
+},
+body: JSON.stringify({
+model: "gpt-4o",
+messages: [{ role: "user", content: message }]
+})
+});
+const data = await res.json();
+return data.choices?.[0]?.message?.content || "⚠️ بدون پاسخ";
+} catch(e) {
+console.error(e);
+return "❌ خطا در ارتباط با سرور";
+}
+}
+
+// ========== ارسال پیام (فقط یه بار) ==========
+async function sendMessage() {
+const input = document.getElementById('userInput');
+const text = input.value.trim();
+if(!text) return;
+
+const chat = chats.find(c => c.id === currentId);
+if(!chat) return;
+
+input.value = "";
+
+// ذخیره پیام کاربر
+chat.messages.push({type: 'user', text});
+
+// آپدیت عنوان
+if(chat.messages.filter(m => m.type === 'user').length === 1) {
+chat.title = text.length > 25 ? text.slice(0,25)+'...' : text;
+}
+
+save();
+renderChat(); // رندر کل چت با پیام جدید
+showTyping();
+
+const response = await sendToAPI(text);
+hideTyping();
+
+// ذخیره پاسخ بات
+chat.messages.push({type: 'bot', text: response});
+save();
+renderChat(); // رندر کل چت با پاسخ
 }
 
 // ========== منو ==========
