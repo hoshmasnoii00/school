@@ -22,7 +22,8 @@ min-height:100vh;
 display:flex;flex-direction:column;
 background:linear-gradient(145deg,var(--bg1),var(--bg2));
 color:var(--text);
-overflow-x:hidden
+overflow-x:hidden;
+transition:.3s
 }
 header,footer{
 padding:14px 18px;
@@ -88,7 +89,7 @@ right:0
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:30px;
+margin-bottom:20px;
 padding-bottom:15px;
 border-bottom:1px solid var(--border)
 }
@@ -111,13 +112,19 @@ border-radius:10px
 .close-menu:hover{
 background:var(--border)
 }
-.history-list{
-list-style:none;
-display:flex;
-flex-direction:column;
-gap:8px
+.menu-section{
+margin-bottom:25px
 }
-.history-item{
+.menu-section h4{
+margin-bottom:12px;
+color:rgba(255,255,255,.7);
+font-size:.95rem
+}
+.light .menu-section h4{
+color:rgba(0,0,0,.6)
+}
+.menu-item{
+width:100%;
 padding:12px 15px;
 background:var(--glass);
 border:1px solid var(--border);
@@ -125,13 +132,63 @@ border-radius:12px;
 cursor:pointer;
 transition:.2s;
 font-size:.95rem;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis
+margin-bottom:8px;
+text-align:right;
+display:flex;
+align-items:center;
+gap:10px
 }
-.history-item:hover{
+.menu-item:hover{
 border-color:var(--accent);
 transform:translateX(-5px)
+}
+.history-list{
+list-style:none;
+display:flex;
+flex-direction:column;
+gap:8px;
+max-height:200px;
+overflow-y:auto;
+margin-top:10px
+}
+.history-item{
+padding:10px 12px;
+background:var(--glass);
+border:1px solid var(--border);
+border-radius:8px;
+cursor:pointer;
+transition:.2s;
+font-size:.9rem;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+position:relative
+}
+.history-item:hover{
+border-color:var(--accent)
+}
+.history-item.active{
+border-color:var(--accent);
+background:linear-gradient(145deg, rgba(0,224,255,.1), rgba(160,110,255,.1))
+}
+.delete-chat{
+position:absolute;
+left:5px;
+top:50%;
+transform:translateY(-50%);
+width:20px;
+height:20px;
+border-radius:50%;
+background:rgba(255,0,0,.2);
+color:#ff4444;
+display:none;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:14px
+}
+.history-item:hover .delete-chat{
+display:flex
 }
 .backdrop{
 position:fixed;
@@ -245,33 +302,53 @@ color:rgba(0,0,0,.4)
 <div class="header-content">
 <button class="menu-btn" id="menuBtn" aria-label="منو">☰</button>
 <div class="logo">Country AI</div>
-<div style="width:44px"></div> <!-- برای تراز -->
+<div style="width:44px"></div>
 </div>
 </header>
 
-<!-- منوی همبرگری تاریخچه -->
+<!-- منوی همبرگری کامل -->
 <div class="menu-overlay" id="menuOverlay">
 <div class="menu-header">
-<h3>تاریخچه</h3>
+<h3>منو</h3>
 <button class="close-menu" id="closeMenu">✕</button>
 </div>
-<ul class="history-list" id="historyList">
-<li class="history-item">آب و هوای ایران</li>
-<li class="history-item">جمعیت کشورها</li>
-<li class="history-item">پایتخت فرانسه</li>
-<li class="history-item">مساحت روسیه</li>
-<li class="history-item">وضعیت اقتصادی</li>
-<li class="history-item">پرچم آلمان</li>
-</ul>
+
+<!-- بخش تاریخچه -->
+<div class="menu-section">
+<h4>📜 تاریخچه چت‌ها</h4>
+<button class="menu-item" id="newChatBtnMenu">
+<span>➕</span> چت جدید
+</button>
+<ul class="history-list" id="historyList"></ul>
+</div>
+
+<!-- بخش تنظیمات -->
+<div class="menu-section">
+<h4>⚙️ تنظیمات</h4>
+<button class="menu-item" id="themeToggle">
+<span>🌓</span> تم روشن/تاریک
+</button>
+<button class="menu-item" id="languageToggle">
+<span>🌐</span> تغییر زبان (فارسی/English)
+</button>
+</div>
+
+<!-- بخش راهنما -->
+<div class="menu-section">
+<h4>ℹ️ درباره ما</h4>
+<button class="menu-item" id="aboutBtn">
+<span>📌</span> درباره Country AI
+</button>
+<button class="menu-item" id="contactBtn">
+<span>📧</span> تماس با ما
+</button>
+</div>
 </div>
 <div class="backdrop" id="backdrop"></div>
 
 <main>
 <div class="chat-container" id="chatContainer">
 <div class="chat-start">به Country AI خوش آمدید! سوال خود را بپرسید.</div>
-<div class="message bot">سلام! چطور می‌توانم درباره کشورها به شما کمک کنم؟</div>
-<div class="message user">آب و هوای ایران چطوره؟</div>
-<div class="message bot">ایران دارای تنوع آب و هوایی زیادی است؛ شمال معتدل و مرطوب، جنوب گرم و مرطوب، مناطق مرکزی گرم و خشک.</div>
 </div>
 
 <footer>
@@ -283,7 +360,195 @@ color:rgba(0,0,0,.4)
 </main>
 
 <script>
-// منوی همبرگری
+// ========== تنظیمات اولیه ==========
+let currentTheme = localStorage.getItem('theme') || 'dark';
+let currentLanguage = localStorage.getItem('language') || 'fa';
+let chats = JSON.parse(localStorage.getItem('countryAI_chats')) || [];
+let currentChatId = localStorage.getItem('currentChatId') || null;
+
+// اعمال تم اولیه
+if(currentTheme === 'light') {
+document.body.classList.add('light');
+}
+
+// ========== توابع کمکی ==========
+function generateId() {
+return Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+}
+
+function getCurrentChat() {
+return chats.find(c => c.id === currentChatId);
+}
+
+function saveToStorage() {
+localStorage.setItem('countryAI_chats', JSON.stringify(chats));
+localStorage.setItem('currentChatId', currentChatId);
+localStorage.setItem('theme', currentTheme);
+localStorage.setItem('language', currentLanguage);
+}
+
+// ========== مدیریت چت‌ها ==========
+function createNewChat() {
+const welcomeMsg = currentLanguage === 'fa' ? 
+"سلام! چطور می‌توانم درباره کشورها به شما کمک کنم؟" : 
+"Hello! How can I help you about countries?";
+
+const newChat = {
+id: generateId(),
+title: currentLanguage === 'fa' ? 'چت جدید' : 'New Chat',
+messages: [
+{ type: 'bot', content: welcomeMsg, timestamp: Date.now() }
+],
+timestamp: Date.now()
+};
+
+chats.unshift(newChat);
+currentChatId = newChat.id;
+saveToStorage();
+renderChat();
+renderHistory();
+closeMenu();
+}
+
+function deleteChat(chatId, event) {
+event.stopPropagation();
+if (chats.length <= 1) {
+chats = [];
+createNewChat();
+} else {
+chats = chats.filter(c => c.id !== chatId);
+if (currentChatId === chatId) {
+currentChatId = chats[0].id;
+}
+saveToStorage();
+renderChat();
+renderHistory();
+}
+}
+
+// ========== API واقعی ==========
+async function callAI(message) {
+try {
+// اینجا API واقعی شما قرار می‌گیره
+const response = await fetch('YOUR_API_ENDPOINT', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify({
+message: message,
+language: currentLanguage
+})
+});
+
+if (!response.ok) throw new Error('API Error');
+const data = await response.json();
+return data.response || data.message || 'پاسخی دریافت نشد';
+
+} catch (error) {
+console.error('API Error:', error);
+return currentLanguage === 'fa' ?
+'متاسفم، خطایی رخ داد. دوباره تلاش کنید.' :
+'Sorry, an error occurred. Please try again.';
+}
+}
+
+// ========== ارسال پیام ==========
+async function sendMessage() {
+const input = document.getElementById('userInput');
+const msg = input.value.trim();
+if (!msg) return;
+
+const currentChat = getCurrentChat();
+if (!currentChat) return;
+
+// نمایش پیام کاربر
+currentChat.messages.push({
+type: 'user',
+content: msg,
+timestamp: Date.now()
+});
+
+// به‌روزرسانی عنوان چت
+if (currentChat.messages.filter(m => m.type === 'user').length === 1) {
+currentChat.title = msg.length > 30 ? msg.substring(0, 30) + '...' : msg;
+}
+
+input.value = '';
+renderChat();
+saveToStorage();
+
+// دریافت پاسخ از API
+const botResponse = await callAI(msg);
+currentChat.messages.push({
+type: 'bot',
+content: botResponse,
+timestamp: Date.now()
+});
+
+saveToStorage();
+renderChat();
+renderHistory();
+}
+
+// ========== رندر کردن ==========
+function renderChat() {
+const container = document.getElementById('chatContainer');
+const currentChat = getCurrentChat();
+
+if (!currentChat) {
+createNewChat();
+return;
+}
+
+container.innerHTML = '';
+
+if (currentChat.messages.length === 0) {
+container.innerHTML = '<div class="chat-start">به Country AI خوش آمدید! سوال خود را بپرسید.</div>';
+} else {
+currentChat.messages.forEach(msg => {
+const msgDiv = document.createElement('div');
+msgDiv.className = `message ${msg.type}`;
+msgDiv.textContent = msg.content;
+container.appendChild(msgDiv);
+});
+}
+
+container.scrollTop = container.scrollHeight;
+}
+
+function renderHistory() {
+const historyList = document.getElementById('historyList');
+historyList.innerHTML = '';
+
+chats.slice(0, 10).forEach(chat => {
+const li = document.createElement('li');
+li.className = `history-item ${chat.id === currentChatId ? 'active' : ''}`;
+li.setAttribute('data-id', chat.id);
+
+const titleSpan = document.createElement('span');
+titleSpan.textContent = chat.title;
+
+const deleteBtn = document.createElement('span');
+deleteBtn.className = 'delete-chat';
+deleteBtn.innerHTML = '×';
+deleteBtn.onclick = (e) => deleteChat(chat.id, e);
+
+li.appendChild(titleSpan);
+li.appendChild(deleteBtn);
+
+li.onclick = () => {
+currentChatId = chat.id;
+saveToStorage();
+renderChat();
+closeMenu();
+};
+
+historyList.appendChild(li);
+});
+}
+
+// ========== منو ==========
 const menuBtn = document.getElementById('menuBtn');
 const menuOverlay = document.getElementById('menuOverlay');
 const closeMenu = document.getElementById('closeMenu');
@@ -293,76 +558,97 @@ function openMenu() {
 menuOverlay.classList.add('active');
 backdrop.classList.add('active');
 document.body.style.overflow = 'hidden';
+renderHistory();
 }
 
-function closeMenuFunc() {
+function closeMenu() {
 menuOverlay.classList.remove('active');
 backdrop.classList.remove('active');
 document.body.style.overflow = '';
 }
 
 menuBtn.addEventListener('click', openMenu);
-closeMenu.addEventListener('click', closeMenuFunc);
-backdrop.addEventListener('click', closeMenuFunc);
+closeMenu.addEventListener('click', closeMenu);
+backdrop.addEventListener('click', closeMenu);
 
-// آیتم‌های تاریخچه (نمونه)
-document.querySelectorAll('.history-item').forEach(item => {
-item.addEventListener('click', function() {
-const text = this.textContent;
-document.getElementById('userInput').value = text;
-closeMenuFunc();
-});
+// ========== دکمه‌های منو ==========
+document.getElementById('newChatBtnMenu').addEventListener('click', () => {
+createNewChat();
+closeMenu();
 });
 
-// ارسال پیام (نمونه)
+document.getElementById('themeToggle').addEventListener('click', () => {
+document.body.classList.toggle('light');
+currentTheme = document.body.classList.contains('light') ? 'light' : 'dark';
+localStorage.setItem('theme', currentTheme);
+closeMenu();
+});
+
+document.getElementById('languageToggle').addEventListener('click', () => {
+currentLanguage = currentLanguage === 'fa' ? 'en' : 'fa';
+localStorage.setItem('language', currentLanguage);
+
+// به‌روزرسانی متن placeholder
+document.getElementById('userInput').placeholder = 
+currentLanguage === 'fa' ? 'سوال خود را بپرسید...' : 'Ask your question...';
+
+closeMenu();
+alert(currentLanguage === 'fa' ? 'زبان به انگلیسی تغییر کرد' : 'Language changed to Persian');
+});
+
+document.getElementById('aboutBtn').addEventListener('click', () => {
+alert(currentLanguage === 'fa' ? 
+'Country AI - دستیار هوشمند اطلاعات کشورها' : 
+'Country AI - Smart assistant for country information');
+closeMenu();
+});
+
+document.getElementById('contactBtn').addEventListener('click', () => {
+alert(currentLanguage === 'fa' ? 
+'ایمیل: support@countryai.com' : 
+'Email: support@countryai.com');
+closeMenu();
+});
+
+// ========== رویدادهای ارسال ==========
 const sendBtn = document.getElementById('sendBtn');
 const userInput = document.getElementById('userInput');
-const chatContainer = document.getElementById('chatContainer');
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', (e) => {
-if(e.key === 'Enter') sendMessage();
+if (e.key === 'Enter') sendMessage();
 });
 
-function sendMessage() {
-const msg = userInput.value.trim();
-if(!msg) return;
-
-// افزودن پیام کاربر
-const userMsg = document.createElement('div');
-userMsg.className = 'message user';
-userMsg.textContent = msg;
-chatContainer.appendChild(userMsg);
-
-// پاک کردن ورودی
-userInput.value = '';
-
-// حذف پیام خوش‌آمدگویی اولیه
-const startMsg = document.querySelector('.chat-start');
-if(startMsg && startMsg.style.display !== 'none') {
-startMsg.style.display = 'none';
+// ========== بارگذاری اولیه ==========
+if (chats.length === 0) {
+createNewChat();
+} else {
+if (!currentChatId || !chats.find(c => c.id === currentChatId)) {
+currentChatId = chats[0].id;
+}
+renderChat();
+renderHistory();
 }
 
-// اسکرول به پایین
-chatContainer.scrollTop = chatContainer.scrollHeight;
-
-// شبیه‌سازی پاسخ (API دست نخورده)
-setTimeout(() => {
-const botMsg = document.createElement('div');
-botMsg.className = 'message bot';
-botMsg.textContent = 'این پاسخ نمونه است. API شما دست نخورده باقی مانده.';
-chatContainer.appendChild(botMsg);
-chatContainer.scrollTop = chatContainer.scrollHeight;
-}, 500);
-}
-
-// تم روشن/تاریک (اختیاری - بدون API)
-const root = document.documentElement;
-// برای تغییر تم می‌توانید کلاس light رو به body اضافه کنید
+// تنظیم placeholder بر اساس زبان
+userInput.placeholder = currentLanguage === 'fa' ? 'سوال خود را بپرسید...' : 'Ask your question...';
 </script>
 
-<!-- API شما اینجاست و دست نخورده باقی می‌مونه -->
-<!-- <script src="your-api.js"></script> -->
+<!-- API واقعی شما - اینجا لینک API خودتون رو بزارید -->
+<script>
+// مثال: اگر API شما به این شکل هست
+/*
+async function callAI(message) {
+const response = await fetch('https://your-api.com/chat', {
+method: 'POST',
+headers: {'Content-Type': 'application/json'},
+body: JSON.stringify({message, language: currentLanguage})
+});
+const data = await response.json();
+return data.answer;
+}
+*/
+</script>
 
 </body>
 </html>
