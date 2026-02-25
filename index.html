@@ -6,143 +6,93 @@
 <title>Country AI</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-:root{
---bg1:#000;
---bg2:#0a0a0a;
---text:#fff;
---glass:rgba(25,25,35,.95);
---border:rgba(255,255,255,.1);
---accent:#00e0ff;
---accent2:#a06eff;
---user:rgba(0,100,255,.25);
---bot:rgba(150,50,255,.25);
---menu-bg:rgba(20,20,30,.98)
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif
 }
-.light{
---bg1:#fff;
---bg2:#f5f5ff;
---text:#000;
---glass:rgba(255,255,255,.95);
---border:rgba(0,0,0,.1);
---user:rgba(0,100,255,.1);
---bot:rgba(150,50,255,.1);
---menu-bg:rgba(250,250,255,.98)
-}
-body{
-min-height:100vh;
-display:flex;
-flex-direction:column;
-background:linear-gradient(145deg,var(--bg1),var(--bg2));
-color:var(--text);
-overflow-x:hidden;
-transition:.3s
-}
-header,footer{
-padding:14px 18px;
-background:var(--glass);
-border-bottom:1px solid var(--border);
-backdrop-filter:blur(10px);
-z-index:10
-}
-footer{
-border-top:1px solid var(--border);
-border-bottom:none;
-padding:12px 18px
-}
-.logo{
-font-weight:700;
-font-size:1.8rem;
-background:linear-gradient(145deg,#fff,var(--accent),var(--accent2));
--webkit-background-clip:text;
-color:transparent
-}
-.header-content{
-display:flex;
-align-items:center;
-justify-content:space-between;
-max-width:1200px;
-margin:0 auto;
-width:100%
-}
-.menu-btn{
-background:none;
-border:none;
-color:var(--text);
-font-size:2rem;
-cursor:pointer;
-width:44px;
-height:44px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:12px;
-transition:.2s
-}
-.menu-btn:hover{background:var(--border)}
 
-/* ======== چت ======== */
+body{
+background:#343541;
+color:#fff;
+height:100vh;
+display:flex;
+flex-direction:column
+}
+
+header{
+padding:16px;
+text-align:center;
+font-weight:600;
+font-size:18px;
+border-bottom:1px solid #444654;
+background:#202123
+}
+
 main{
 flex:1;
-display:flex;
-flex-direction:column;
-max-width:1000px;
-margin:0 auto;
-width:100%;
-padding:20px
-}
-.chat-container{
-flex:1;
-display:flex;
-flex-direction:column;
-gap:10px;
 overflow-y:auto;
-padding:15px 0
+padding:20px 0;
+display:flex;
+flex-direction:column;
+align-items:center
 }
-.message-wrapper{display:flex;flex-direction:column;max-width:85%}
-.message-wrapper.user{align-self:flex-end}
-.message-wrapper.bot{align-self:flex-start}
+
+.chat-container{
+width:100%;
+max-width:800px;
+display:flex;
+flex-direction:column;
+gap:20px;
+padding:0 20px
+}
+
+.message-wrapper{
+width:100%;
+display:flex
+}
+
+.message-wrapper.user{
+justify-content:flex-end
+}
+
+.message-wrapper.bot{
+justify-content:flex-start
+}
+
 .message{
 padding:14px 18px;
-border-radius:24px;
-font-size:.95rem;
-line-height:1.5;
-word-wrap:break-word
+border-radius:8px;
+max-width:80%;
+line-height:1.6;
+font-size:15px
 }
-.message-wrapper.user .message{
-background:var(--user);
-border:1px solid var(--border);
-border-bottom-left-radius:6px
-}
-.message-wrapper.bot .message{
-background:var(--bot);
-border:1px solid var(--border);
-border-bottom-right-radius:6px
-}
-.copy-message-btn{
-background:none;
-border:1px solid var(--border);
-color:var(--text);
-padding:4px 8px;
-border-radius:12px;
-font-size:.8rem;
-cursor:pointer;
-width:fit-content;
-margin-top:4px;
-transition:.2s
-}
-.copy-message-btn:hover{background:var(--border)}
 
-/* ======== پنل جدید مثل عکس ======== */
-.input-area{
+.message-wrapper.user .message{
+background:#444654
+}
+
+.message-wrapper.bot .message{
+background:#3e3f4b
+}
+
+footer{
+padding:16px;
+background:#343541;
+border-top:1px solid #444654;
 display:flex;
-align-items:center;
-gap:12px;
-background:#1c1c1e;
-border-radius:50px;
-padding:10px 12px 10px 20px;
-border:1px solid rgba(255,255,255,0.08);
-box-shadow:0 0 0 1px rgba(255,255,255,0.02) inset;
+justify-content:center
+}
+
+.input-area{
+width:100%;
+max-width:800px;
+display:flex;
+background:#40414f;
+border-radius:8px;
+padding:10px;
+align-items:center
 }
 
 .input-area input{
@@ -150,42 +100,37 @@ flex:1;
 background:transparent;
 border:none;
 color:#fff;
-font-size:1rem;
-outline:none;
+font-size:15px;
+outline:none
 }
 
 .input-area input::placeholder{
-color:rgba(255,255,255,.4);
+color:#8e8ea0
 }
 
 .send-btn{
-background:#e5e5e5;
+background:transparent;
 border:none;
-width:60px;
-height:60px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
+color:#19c37d;
+font-size:22px;
 cursor:pointer;
-font-size:24px;
-color:#000;
-transition:.2s;
+padding:8px 12px
 }
 
 .send-btn:hover{
-transform:scale(1.05);
-background:#ffffff;
+opacity:.7
 }
 
 .chat-start{
 text-align:center;
-color:rgba(255,255,255,.5);
-padding:40px 20px
+color:#8e8ea0;
+margin-top:40px
 }
 
-@media (max-width:600px){
-.message-wrapper{max-width:90%}
+@media(max-width:600px){
+.message{
+max-width:95%
+}
 }
 </style>
 </head>
@@ -193,23 +138,19 @@ padding:40px 20px
 <body>
 
 <header>
-<div class="header-content">
-<button class="menu-btn">☰</button>
-<div class="logo">Country AI</div>
-<div style="width:44px"></div>
-</div>
+Country AI
 </header>
 
 <main>
 <div class="chat-container" id="chatContainer"></div>
+</main>
 
 <footer>
 <div class="input-area">
-<input type="text" placeholder="سوال خود را بپرسید..." id="userInput">
+<input type="text" placeholder="پیام خود را بنویسید..." id="userInput">
 <button class="send-btn" id="sendBtn">↑</button>
 </div>
 </footer>
-</main>
 
 <script>
 // ===== API (بدون تغییر) =====
@@ -232,7 +173,7 @@ const container=document.getElementById('chatContainer');
 if(!chat)return;
 container.innerHTML='';
 if(chat.messages.length===0){
-container.innerHTML='<div class="chat-start">به Country AI خوش آمدید! سوال خود را بپرسید.</div>';
+container.innerHTML='<div class="chat-start">شروع گفتگو...</div>';
 }else{
 chat.messages.forEach(m=>{
 const wrap=document.createElement('div');
@@ -282,7 +223,10 @@ renderChat();
 
 document.getElementById('sendBtn').onclick=sendMessage;
 document.getElementById('userInput').onkeypress=(e)=>{
-if(e.key==='Enter'){e.preventDefault();sendMessage();}
+if(e.key==='Enter'){
+e.preventDefault();
+sendMessage();
+}
 };
 
 newChat();
